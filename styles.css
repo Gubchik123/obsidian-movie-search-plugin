@@ -1,8 +1,10 @@
-/*
+.movie-search-plugin__settings .search-input-container {
+  width: 100%;
+}
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
-
-If your plugin does not need CSS, delete this file.
-
-*/
+.movie-search-plugin__search-modal--input {
+  padding-bottom: 18px;
+}
+.movie-search-plugin__search-modal--input input {
+  width: 100%;
+}
