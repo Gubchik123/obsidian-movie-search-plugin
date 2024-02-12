@@ -1,96 +1,284 @@
-# Obsidian Sample Plugin
+![Header image](./md_images/header.png)
+_Easily create movie notes._
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+![GitHub release](https://img.shields.io/github/v/release/obsidian-movie-search-plugin/obsidian-movie-search-plugin?sort=semver)
 
-This project uses Typescript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in Typescript Definition format, which contains TSDoc comments describing what it does.
+<br>
 
-**Note:** The Obsidian API is still in early alpha and is subject to change at any time!
+## Features
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+-   Flow:
+    -   Create a new movie note.
+    -   Search for movies by keywords.
+    -   Select the movie from the search results.
+    -   Get the movie information immediately in the Obsidian note.
+-   Settings:
+    -   Set the folder location where the new file is created.
+    -   Set the template file location.
+    -   Set up the services that you use to search for movies.
+-   Third-party plugins integration:
+    -   Use the [Dataview plugin](https://obsidian.md/plugins?id=dataview) to render the movie notes.
+    -   Use the [Templater plugin](https://github.com/SilentVoid13/Templater) with.
+-   Advanced:
+    -   Enables [Inline scripts](#inline-script) for templates.
 
-## First time developing plugins?
+<br>
 
-Quick starting guide for new plugin devs:
+## How to install
 
-- Check if [someone already developed a plugin for what you want](https://obsidian.md/plugins)! There might be an existing plugin similar enough that you can partner up with.
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
+### From Community Plugins
 
-## Releasing new releases
+Click the link to install the Movie Search plugin: [Install Link](https://obsidian.md/plugins?id=movie-search)
 
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.
-- Publish the release.
+**OR**
 
-> You can simplify the version bump process by running `npm version patch`, `npm version minor` or `npm version major` after updating `minAppVersion` manually in `manifest.json`.
-> The command will bump version in `manifest.json` and `package.json`, and add the entry for the new version to `versions.json`
+Search in the Obsidian Community plugin. And install it.
 
-## Adding your plugin to the community plugin list
+![Install image](./md_images/install.png)
 
-- Check https://github.com/obsidianmd/obsidian-releases/blob/master/plugin-review.md
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
+### Manually (from GitHub)
+
+1. Clone the repository to your Obsidian plugins folder.
+
+```bash
+git clone https://github.com/Gubchik123/obsidian-movie-search-plugin.git
+```
+
+2. Install the dependencies.
+
+```bash
+yarn install
+```
+
+3. Build the plugin.
+
+```bash
+yarn build
+```
+
+4. Reload Obsidian and enable the plugin in the settings.
+
+<br>
 
 ## How to use
 
-- Clone this repo.
-- Make sure your NodeJS is at least v16 (`node --version`).
-- `npm i` or `yarn` to install dependencies.
-- `npm run dev` to start compilation in watch mode.
+### 1. Click the ribbon icon (star), or execute the command "Create new movie note".
 
-## Manually installing the plugin
+![1 step image](./md_images/use/1.png)
 
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
+### 2. Search for movies by keywords.
 
-## Improve code quality with eslint (optional)
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
-- To use eslint with this project, make sure to install eslint from terminal:
-  - `npm install -g eslint`
-- To use eslint to analyze this project use this command:
-  - `eslint main.ts`
-  - eslint will then create a report with suggestions for code improvement by file and line number.
-- If your source code is in a folder, such as `src`, you can use eslint with this command to analyze all files in that folder:
-  - `eslint .\src\`
+![2 step image](./md_images/use/2.png)
 
-## Funding URL
+### 3. Select the movie from the search results.
 
-You can include funding URLs where people who use your plugin can financially support it.
+![3 step image](./md_images/use/3.png)
 
-The simple way is to set the `fundingUrl` field to your link in your `manifest.json` file:
+### 4. Voila! A note has been created.
 
-```json
-{
-    "fundingUrl": "https://buymeacoffee.com"
-}
+![4 step image](./md_images/use/4.png)
+
+<br>
+
+## How to use settings
+
+![Settings image](./md_images/settings.png)
+
+### New file location
+
+Set the folder location where the new file is created. Otherwise, a new file is created in the Obsidian Root folder.
+
+### Template file
+
+You can set the template file location. There is an example template at the bottom.
+
+### Service Provider
+
+You can set up the services that you use to search for movies. Only TMDB are available now.
+
+#### TMDB API Settings
+
+##### TMDB API Key
+
+Set the API key for TMDB.
+
+> You can get an API key from [TMDB](https://developer.themoviedb.org/v3/reference/intro/authentication#api-key-quick-start).
+
+> 🚧 WARNING
+> API key is not "Bearer" JWT token. It is a simple string.
+
+<br>
+
+## Example template
+
+Personally I use the following template to create movie notes ;)
+
+> Please also find a definition of the variables used in this template below (look at: [Template variables definitions](#template-variables-definitions)).
+
+```markdown
+---
+created: "{{date:DD.MM.YYYY}} {{time:HH:mm}}"
+tags:
+    - Entertainment
+    - Movie
+status: TO WATCH
+cover: "{{poster_path}}"
+---
+
+## 📺 -> {{title}}
+
+![Cover]({{poster_path}})
+
+### 1️⃣ -> Introduction
+
+Title:: {{title}}
+Release-date:: {{release_date}}
+Vote-average:: {{vote_average}}
+
+### 2️⃣ -> Summary
+
+{{overview}}
+
+### 3️⃣ -> My conclusion
+
+...
+
+#### Score:: 0
+
+### 4️⃣ -> Global Information
+
+Adult:: {{adult}}
+Original-title:: {{original_title}}
+Original-language:: {{original_language}}
+Popularity:: {{popularity}}
+
+### 5️⃣ -> TMDB information
+
+ID:: {{id}}
+Genre-IDs:: {{genre_ids}}
+Vote-count:: {{vote_count}}
+
+![Backdrop]({{backdrop_path}})
 ```
 
-If you have multiple URLs, you can also do:
+> The idea of the template was taken from the [OB_Template](https://github.com/llZektorll/OB_Template/blob/main/0A_Templates/0A_10_Entertainment/0A_10_2_Movies%26ShowReview.md). Look through the repository for more examples.
 
+<br>
+
+## Dataview rendering
+
+![Dataview image](./md_images/dataview.png)
+
+Here is the dataview query used in the demo
+
+### List of watched movies
+
+````
+```dataview
+TABLE WITHOUT ID
+	"![|100](" + cover + ")" as Cover,
+	link(file.link, Title) as Title,
+	dateformat(Release-date, "yyyy") as Year,
+	Vote-average as "Vote average",
+	Original-title as "Org title",
+	Score + " / 10" as Score
+FROM  "My/Entertainments/Movies" AND #Movie
+WHERE status = "WATCHED"
+SORT Score DESC, Vote-average DESC, Title ASC
+```
+````
+
+### List of movies to watch
+
+````
+```dataview
+TABLE WITHOUT ID
+	"![|100](" + cover + ")" as Cover,
+	link(file.link, Title) as Title,
+	dateformat(Release-date, "yyyy") as Year,
+	Vote-average as "Vote average",
+	Original-title as "Org title"
+FROM  "My/Entertainments/Movies" AND #Movie
+WHERE status = "TO WATCH"
+SORT Vote-average DESC, Title ASC
+```
+````
+
+<br>
+
+## Template variables definitions
+
+Please find here a definition of the possible variables to be used in your template. Simply write `{{name}}` in your template, and replace name by the desired movie data, including:
+
+| name              | type              | description                         |
+| ----------------- | ----------------- | ----------------------------------- |
+| title             | string            | The title of the movie.             |
+| poster_path       | string            | The cover image URL of the movie.   |
+| release_date      | string            | The date the movie was published.   |
+| vote_average      | float             | The average vote of the movie.      |
+| overview          | string            | The overview of the movie.          |
+| adult             | boolean           | The adult status of the movie.      |
+| original_title    | string            | The original title of the movie.    |
+| original_language | string            | The original language of the movie. |
+| popularity        | float             | The popularity of the movie.        |
+| id                | float             | The TMDB ID of the movie.           |
+| genre_ids         | array of integers | The genre IDs of the movie.         |
+| vote_count        | integer           | The vote count of the movie.        |
+
+<br>
+
+## Advanced
+
+### Inline Script
+
+#### To print out a movie object:
+
+````
 ```json
-{
-    "fundingUrl": {
-        "Buy Me a Coffee": "https://buymeacoffee.com",
-        "GitHub Sponsor": "https://github.com/sponsors",
-        "Patreon": "https://www.patreon.com/"
-    }
-}
+<%=movie%>
+```
+````
+
+or
+
+````
+```json
+<%=JSON.stringify(movie, null, 2)%>
+```
+````
+
+#### When you want to list or link genre IDs:
+
+```
+---
+Genre-IDs: <%=movie.genre_ids.map(genre_id=>`\n  - ${genre_id}`).join('')%>
+---
+
+Genre-IDs: <%=movie.genre_ids.map(genre_id => `[[Genre/${genre_id}]]`).join(', ')%>
 ```
 
-## API Documentation
+<br>
 
-See https://github.com/obsidianmd/obsidian-api
+## License
+
+[Obsidian Movie Search Plugin](https://github.com/Gubchik123/obsidian-movie-search-plugin) is licensed under the GNU AGPLv3 license. Refer to [MIT License](https://github.com/SilentVoid13/Templater/blob/master/LICENSE.md) for more information.
+
+<br>
+
+## Contributing
+
+Feel free to contribute.
+
+You can create an [issue](https://github.com/Gubchik123/obsidian-movie-search-plugin/issues/new) to report a bug, suggest an improvement for this plugin, ask a question, etc.
+
+You can make a [pull request](https://github.com/Gubchik123/obsidian-movie-search-plugin/compare) to contribute to this plugin development.
+
+<br>
+
+## Support
+
+If this plugin helped you and you wish to contribute :)
+
+Buy me coffee on [buymeacoffee.com/Gubchik123](https://www.buymeacoffee.com/Gubchik123)
+
+<a href="https://www.buymeacoffee.com/Gubchik123" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="60"></a>
