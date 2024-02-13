@@ -1,7 +1,7 @@
 ![Header image](./md_images/header.png)
 _Easily create movie notes._
 
-![GitHub release](https://img.shields.io/github/v/release/obsidian-movie-search-plugin/obsidian-movie-search-plugin?sort=semver)
+![GitHub release](https://img.shields.io/github/v/release/Gubchik123/obsidian-movie-search-plugin?sort=semver)
 
 <br>
 
@@ -34,7 +34,7 @@ Click the link to install the Movie Search plugin: [Install Link](https://obsidi
 
 Search in the Obsidian Community plugin. And install it.
 
-![Install image](./md_images/install.png)
+<p align="center"><img src="./md_images/install.png" alt="Install image"></img></p>
 
 ### Manually (from GitHub)
 
@@ -64,25 +64,25 @@ yarn build
 
 ### 1. Click the ribbon icon (star), or execute the command "Create new movie note".
 
-![1 step image](./md_images/use/1.png)
+<p align="center"><img src="./md_images/use/1.png" alt="1 step image"></img></p>
 
 ### 2. Search for movies by keywords.
 
-![2 step image](./md_images/use/2.png)
+<p align="center"><img src="./md_images/use/2.png" alt="2 step image"></img></p>
 
 ### 3. Select the movie from the search results.
 
-![3 step image](./md_images/use/3.png)
+<p align="center"><img src="./md_images/use/3.png" alt="3 step image"></img></p>
 
 ### 4. Voila! A note has been created.
 
-![4 step image](./md_images/use/4.png)
+<p align="center"><img src="./md_images/use/4.png" alt="4 step image"></img></p>
 
 <br>
 
 ## How to use settings
 
-![Settings image](./md_images/settings.png)
+<p align="center"><img src="./md_images/settings.png" alt="Settings image"></img></p>
 
 ### New file location
 
@@ -167,7 +167,7 @@ Vote-count:: {{vote_count}}
 
 ## Dataview rendering
 
-![Dataview image](./md_images/dataview.png)
+<p align="center"><img src="./md_images/dataview.png" alt="Dataview image"></img></p>
 
 Here is the dataview query used in the demo
 
