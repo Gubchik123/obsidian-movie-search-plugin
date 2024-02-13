@@ -93,6 +93,14 @@ Set the folder location where the new file is created. Otherwise, a new file is 
 
 You can set the template file location. There is an example template at the bottom.
 
+### Preferred locale
+
+Set the preferred locale for the movie search. The default is 'auto', which means that the locale is automatically detected by user's query or browser settings.
+
+### Open new movie note
+
+Enable or disable the opening of the new movie note after creation.
+
 ### Service Provider
 
 You can set up the services that you use to search for movies. Only TMDB are available now.
@@ -105,9 +113,13 @@ Set the API key for TMDB.
 
 > You can get an API key from [TMDB](https://developer.themoviedb.org/v3/reference/intro/authentication#api-key-quick-start).
 
-> 🚧 WARNING
+> 🚧 **WARNING**
 >
-> API key is not "Bearer" JWT token. It is a simple string.
+> API key is not 'Bearer' JSON Web Token (JWT).
+
+##### Include adult
+
+Enable or disable the inclusion of adult content in the search results.
 
 <br>
 

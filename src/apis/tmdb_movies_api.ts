@@ -1,22 +1,26 @@
-import { api_get, BaseMoviesAPI } from "@apis/base_api";
-import { Movie } from "@models/movie.model";
-import { TMDBMovieResponse, Result } from "./models/tmdb_movies_response";
-
 import LanguageDetect from "languagedetect";
+
+import { Movie } from "@models/movie.model";
+import { api_get, BaseMoviesAPI } from "@apis/base_api";
+import { TMDBMovieResponse, Result } from "./models/tmdb_movies_response";
 
 const language_detector = new LanguageDetect();
 
 export class TMDBMoviesAPI implements BaseMoviesAPI {
-	constructor(private readonly api_key?: string) {}
+	constructor(
+		private readonly api_key?: string,
+		private readonly include_adult?: boolean,
+		private readonly locale_preference?: string,
+	) {}
 
 	async get_by_query(query: string) {
 		try {
 			const search_results = await api_get<TMDBMovieResponse>("https://api.themoviedb.org/3/search/movie", {
 				page: 1,
 				query: query,
-				include_adult: true,
 				api_key: this.api_key,
-				language: this.get_language_by_(query),
+				include_adult: this.include_adult,
+				language: this.locale_preference === "auto" ? this.get_language_by_(query) : this.locale_preference,
 			});
 			if (!search_results?.total_results) return [];
 			return search_results.results.map(result => this.create_movie_from_(result));
@@ -24,6 +28,13 @@ export class TMDBMoviesAPI implements BaseMoviesAPI {
 			console.warn(error);
 			throw error;
 		}
+	}
+
+	get_language_by_(query: string): string {
+		const detected_languages = language_detector.detect(query, 3);
+
+		if (detected_languages.length) return detected_languages[0][0].slice(0, 2);
+		return window.moment.locale() || "en";
 	}
 
 	create_movie_from_(result: Result): Movie {
@@ -44,13 +55,5 @@ export class TMDBMoviesAPI implements BaseMoviesAPI {
 			backdrop_path: `https://image.tmdb.org/t/p/original${result.backdrop_path}`,
 		};
 		return movie;
-	}
-
-	get_language_by_(query: string): string {
-		const detected = language_detector.detect(query, 3);
-		if (detected.length) {
-			return detected[0][0].slice(0, 2);
-		}
-		return "ru";
 	}
 }

@@ -11,7 +11,7 @@ export interface BaseMoviesAPI {
 export function get_service_provider(settings: MovieSearchPluginSettings): BaseMoviesAPI {
 	if (settings.service_provider === ServiceProvider.tmdb) {
 		if (!settings.api_key) throw new Error("TMDB API key is required!");
-		return new TMDBMoviesAPI(settings.api_key);
+		return new TMDBMoviesAPI(settings.api_key, settings.include_adult, settings.locale_preference);
 	}
 }
 

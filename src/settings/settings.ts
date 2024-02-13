@@ -1,8 +1,9 @@
 import { App, PluginSettingTab, Setting, Notice } from "obsidian";
 
 import { ServiceProvider } from "@src/constants";
-import { SettingServiceProviderModal } from "@views/setting_service_provider_modal";
+
 import MovieSearchPlugin from "../main";
+
 import { FileSuggest } from "./suggesters/FileSuggester";
 import { FolderSuggest } from "./suggesters/FolderSuggester";
 
@@ -14,27 +15,33 @@ export enum DefaultFrontmatterKeyType {
 export interface MovieSearchPluginSettings {
 	folder: string; // new file location
 	file_name_format: string; // new file name format
+	template_file: string;
+	open_page_on_completion: boolean;
+	locale_preference: string;
+	service_provider: ServiceProvider;
+	api_key: string;
+	include_adult: boolean;
+	// Default settings
 	frontmatter: string; // frontmatter that is inserted into the file
 	content: string; // what is automatically written to the file.
 	use_default_frontmatter: boolean;
 	default_frontmatter_key_type: DefaultFrontmatterKeyType;
-	template_file: string;
-	service_provider: ServiceProvider;
-	api_key: string;
-	open_page_on_completion: boolean;
 }
 
 export const DEFAULT_SETTINGS: MovieSearchPluginSettings = {
 	folder: "",
 	file_name_format: "{{title}}",
+	template_file: "",
+	open_page_on_completion: true,
+	locale_preference: "auto",
+	service_provider: ServiceProvider.tmdb,
+	api_key: "",
+	include_adult: false,
+	// Default settings
 	frontmatter: "",
 	content: "",
 	use_default_frontmatter: true,
 	default_frontmatter_key_type: DefaultFrontmatterKeyType.snake_case,
-	template_file: "",
-	service_provider: ServiceProvider.tmdb,
-	api_key: "",
-	open_page_on_completion: true,
 };
 
 export class MovieSearchSettingTab extends PluginSettingTab {
@@ -55,7 +62,6 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 
 		createHeader(containerEl, "General Settings");
 
-		// New file location
 		new Setting(containerEl)
 			.setName("New file location")
 			.setDesc("New movie notes will be placed here.")
@@ -73,11 +79,9 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 					});
 			});
 
-		const template_file = document.createDocumentFragment();
-		template_file.createDiv({ text: "Files will be available as templates." });
 		new Setting(containerEl)
 			.setName("Template file")
-			.setDesc(template_file)
+			.setDesc("Files will be available as templates.")
 			.addSearch(cb => {
 				try {
 					new FileSuggest(this.app, cb.inputEl);
@@ -92,12 +96,38 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 					});
 			});
 
-		// Service Provider
-		let service_provider_extra_settings_button: HTMLElement;
-		// eslint-disable-next-line prefer-const
-		const hide_service_provider_extra_setting_button = () => {
-			service_provider_extra_settings_button.addClass("movie-search-plugin__hide");
-		};
+		new Setting(containerEl)
+			.setName("Preferred locale")
+			.setDesc("Sets the preferred locale to use when searching for movies.")
+			.addDropdown(dropdown => {
+				const default_locale = "auto";
+
+				dropdown.addOption(default_locale, default_locale);
+				window.moment.locales().forEach(locale => {
+					dropdown.addOption(locale, locale);
+				});
+
+				const set_value = this.settings.locale_preference;
+				if (set_value === "auto") dropdown.setValue(default_locale);
+				else dropdown.setValue(set_value);
+
+				dropdown.onChange(async value => {
+					const new_value = value;
+					this.settings.locale_preference = new_value;
+					await this.plugin.saveSettings();
+				});
+			});
+
+		new Setting(containerEl)
+			.setName("Open new movie note")
+			.setDesc("Enable or disable the automatic opening of the note on creation.")
+			.addToggle(toggle =>
+				toggle.setValue(this.plugin.settings.open_page_on_completion).onChange(async value => {
+					this.plugin.settings.open_page_on_completion = value;
+					await this.plugin.saveSettings();
+				}),
+			);
+
 		new Setting(containerEl)
 			.setName("Service Provider")
 			.setDesc("Choose the service provider you want to use to search your movies.")
@@ -107,26 +137,18 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 				dropDown.setValue(this.plugin.settings?.service_provider ?? ServiceProvider.tmdb);
 				dropDown.onChange(async value => {
 					const new_value = value as ServiceProvider;
-					hide_service_provider_extra_setting_button();
 					this.settings["service_provider"] = new_value;
 					await this.plugin.saveSettings();
 				});
-			})
-			.addExtraButton(component => {
-				service_provider_extra_settings_button = component.extraSettingsEl;
-				hide_service_provider_extra_setting_button();
-				component.onClick(() => {
-					new SettingServiceProviderModal(this.plugin).open();
-				});
 			});
 
-		// API Settings
 		const APISettingsChildren: Setting[] = [];
 		createHeader(containerEl, "TMDB API Settings");
 		let temp_key_value = "";
 		APISettingsChildren.push(
 			new Setting(containerEl)
 				.setName("TMDB API Key")
+				.setDesc("WARNING: It is not 'Bearer' JSON Web Token (JWT).")
 				.addText(text => {
 					text.inputEl.type = "password";
 					text.setValue(this.plugin.settings.api_key).onChange(async value => {
@@ -140,6 +162,17 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 						new Notice("API key saved!");
 					});
 				}),
+		);
+		APISettingsChildren.push(
+			new Setting(containerEl)
+				.setName("Include Adult")
+				.setDesc("Enable or disable adult content.")
+				.addToggle(toggle =>
+					toggle.setValue(this.plugin.settings.include_adult).onChange(async value => {
+						this.plugin.settings.include_adult = value;
+						await this.plugin.saveSettings();
+					}),
+				),
 		);
 	}
 }

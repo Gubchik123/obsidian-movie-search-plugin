@@ -27,13 +27,10 @@ export class MovieSuggestModal extends SuggestModal<Movie> {
 
 		const release_date = movie.release_date ? movie.release_date : "-";
 		const original_title = movie.original_title ? movie.original_title : "-";
-		if (release_date !== "-" || (original_title !== "-" && original_title !== movie.title)) {
-			const subtitle =
-				movie.title === original_title
-					? `Release date: ${release_date}`
-					: `Original title: ${original_title} (${release_date})`;
-			element.createEl("small", { text: subtitle });
-		}
+		if (release_date !== "-" || (original_title !== "-" && original_title !== movie.title))
+			element.createEl("small", {
+				text: movie.title === original_title ? release_date : `${original_title} (${release_date})`,
+			});
 	}
 
 	onChooseSuggestion(movie: Movie) {
