@@ -106,6 +106,7 @@ Set the API key for TMDB.
 > You can get an API key from [TMDB](https://developer.themoviedb.org/v3/reference/intro/authentication#api-key-quick-start).
 
 > 🚧 WARNING
+>
 > API key is not "Bearer" JWT token. It is a simple string.
 
 <br>

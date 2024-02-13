@@ -6,8 +6,6 @@ import MovieSearchPlugin from "../main";
 import { FileSuggest } from "./suggesters/FileSuggester";
 import { FolderSuggest } from "./suggesters/FolderSuggester";
 
-const safe_storage = (window as any).electron?.remote.safeStorage;
-
 export enum DefaultFrontmatterKeyType {
 	snake_case = "Snake Case",
 	camel_case = "Camel Case",
@@ -132,16 +130,14 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 				.addText(text => {
 					text.inputEl.type = "password";
 					text.setValue(this.plugin.settings.api_key).onChange(async value => {
-						if (safe_storage && safe_storage.isEncryptionAvailable())
-							temp_key_value = safe_storage.encryptString(value).toString("hex");
-						else temp_key_value = value;
+						temp_key_value = value;
 					});
 				})
 				.addButton(button => {
 					button.setButtonText("Save Key").onClick(async () => {
 						this.plugin.settings.api_key = temp_key_value;
 						await this.plugin.saveSettings();
-						new Notice("Apikey Saved");
+						new Notice("API key saved!");
 					});
 				}),
 		);

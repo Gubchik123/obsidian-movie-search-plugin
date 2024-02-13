@@ -5,27 +5,19 @@ import { TMDBMovieResponse, Result } from "./models/tmdb_movies_response";
 import LanguageDetect from "languagedetect";
 
 const language_detector = new LanguageDetect();
-const safe_storage = (window as any).electron?.remote.safeStorage;
 
 export class TMDBMoviesAPI implements BaseMoviesAPI {
 	constructor(private readonly api_key?: string) {}
 
 	async get_by_query(query: string) {
 		try {
-			const params = {
+			const search_results = await api_get<TMDBMovieResponse>("https://api.themoviedb.org/3/search/movie", {
 				page: 1,
 				query: query,
 				include_adult: true,
+				api_key: this.api_key,
 				language: this.get_language_by_(query),
-			};
-
-			if (this.api_key !== "")
-				if (safe_storage && safe_storage.isEncryptionAvailable())
-					params["api_key"] = safe_storage.decryptString(Buffer.from(this.api_key, "hex"));
-			const search_results = await api_get<TMDBMovieResponse>(
-				"https://api.themoviedb.org/3/search/movie",
-				params,
-			);
+			});
 			if (!search_results?.total_results) return [];
 			return search_results.results.map(result => this.create_movie_from_(result));
 		} catch (error) {
