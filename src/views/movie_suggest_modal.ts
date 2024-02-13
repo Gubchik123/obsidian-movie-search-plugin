@@ -15,7 +15,9 @@ export class MovieSuggestModal extends SuggestModal<Movie> {
 			const search_query = query?.toLowerCase();
 			return (
 				movie.title?.toLowerCase().includes(search_query) ||
-				movie.original_title?.toLowerCase().includes(search_query)
+				movie.original_title?.toLowerCase().includes(search_query) ||
+				movie.release_date?.toLowerCase().includes(search_query) ||
+				movie.original_language?.toLowerCase().includes(search_query)
 			);
 		});
 	}
