@@ -2,6 +2,7 @@
 _Easily create movie notes._
 
 ![GitHub release](https://img.shields.io/github/v/release/Gubchik123/obsidian-movie-search-plugin?sort=semver)
+[![GitHub Pages](https://github.com/Gubchik123/obsidian-movie-search-plugin/actions/workflows/pages/pages-build-deployment/badge.svg?branch=master)](https://github.com/Gubchik123/obsidian-movie-search-plugin/actions/workflows/pages/pages-build-deployment)
 
 <br>
 
@@ -34,7 +35,7 @@ Click the link to install the Movie Search plugin: [Install Link](https://obsidi
 
 Search in the Obsidian Community plugin. And install it.
 
-<p align="center"><img src="./md_images/install.png" alt="Install image"></img></p>
+<p align="center"><img src="./md_images/install.png" alt="Install image"/></p>
 
 ### Manually (from GitHub)
 
@@ -64,25 +65,25 @@ yarn build
 
 ### 1. Click the ribbon icon (star), or execute the command "Create new movie note".
 
-<p align="center"><img src="./md_images/use/1.png" alt="1 step image"></img></p>
+<p align="center"><img src="./md_images/use/1.png" alt="1 step image"/></p>
 
 ### 2. Search for movies by keywords.
 
-<p align="center"><img src="./md_images/use/2.png" alt="2 step image"></img></p>
+<p align="center"><img src="./md_images/use/2.png" alt="2 step image"/></p>
 
 ### 3. Select the movie from the search results.
 
-<p align="center"><img src="./md_images/use/3.png" alt="3 step image"></img></p>
+<p align="center"><img src="./md_images/use/3.png" alt="3 step image"/></p>
 
 ### 4. Voila! A note has been created.
 
-<p align="center"><img src="./md_images/use/4.png" alt="4 step image"></img></p>
+<p align="center"><img src="./md_images/use/4.png" alt="4 step image"/></p>
 
 <br>
 
 ## How to use settings
 
-<p align="center"><img src="./md_images/settings.png" alt="Settings image"></img></p>
+<p align="center"><img src="./md_images/settings.png" alt="Settings image"/></p>
 
 ### New file location
 
@@ -167,7 +168,7 @@ Vote-count:: {{vote_count}}
 
 ## Dataview rendering
 
-<p align="center"><img src="./md_images/dataview.png" alt="Dataview image"></img></p>
+<p align="center"><img src="./md_images/dataview.png" alt="Dataview image"/></p>
 
 Here is the dataview query used in the demo
 
