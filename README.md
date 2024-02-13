@@ -2,7 +2,7 @@
 _Easily create movie notes._
 
 ![GitHub release](https://img.shields.io/github/v/release/Gubchik123/obsidian-movie-search-plugin?sort=semver)
-[![GitHub Pages](https://github.com/Gubchik123/obsidian-movie-search-plugin/actions/workflows/pages/pages-build-deployment/badge.svg?branch=master)](https://github.com/Gubchik123/obsidian-movie-search-plugin/actions/workflows/pages/pages-build-deployment)
+[![GitHub Pages](https://github.com/Gubchik123/obsidian-movie-search-plugin/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Gubchik123/obsidian-movie-search-plugin/actions/workflows/pages/pages-build-deployment)
 
 <br>
 
@@ -275,7 +275,7 @@ Genre-IDs: <%=movie.genre_ids.map(genre_id => `[[Genre/${genre_id}]]`).join(', '
 
 ## License
 
-[Obsidian Movie Search Plugin](https://github.com/Gubchik123/obsidian-movie-search-plugin) is licensed under the GNU AGPLv3 license. Refer to [MIT License](https://github.com/SilentVoid13/Templater/blob/master/LICENSE.md) for more information.
+[Obsidian Movie Search Plugin](https://github.com/Gubchik123/obsidian-movie-search-plugin) is licensed under the [MIT License](https://github.com/Gubchik123/obsidian-movie-search-plugin/blob/master/LICENSE.md).
 
 <br>
 
