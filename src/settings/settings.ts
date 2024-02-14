@@ -1,4 +1,4 @@
-import { App, PluginSettingTab, Setting, Notice } from "obsidian";
+import { App, PluginSettingTab, Setting } from "obsidian";
 
 import { ServiceProvider } from "@src/constants";
 
@@ -14,7 +14,6 @@ export enum DefaultFrontmatterKeyType {
 
 export interface MovieSearchPluginSettings {
 	folder: string; // new file location
-	file_name_format: string; // new file name format
 	template_file: string;
 	open_page_on_completion: boolean;
 	locale_preference: string;
@@ -30,7 +29,6 @@ export interface MovieSearchPluginSettings {
 
 export const DEFAULT_SETTINGS: MovieSearchPluginSettings = {
 	folder: "",
-	file_name_format: "{{title}}",
 	template_file: "",
 	open_page_on_completion: true,
 	locale_preference: "auto",
@@ -57,13 +55,10 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 		const { containerEl } = this;
 
 		containerEl.empty();
-
 		containerEl.classList.add("movie-search-plugin__settings");
-
-		createHeader(containerEl, "General Settings");
-
+		// General Settings
 		new Setting(containerEl)
-			.setName("New file location")
+			.setName("New File Location")
 			.setDesc("New movie notes will be placed here.")
 			.addSearch(cb => {
 				try {
@@ -78,9 +73,8 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 						this.plugin.saveSettings();
 					});
 			});
-
 		new Setting(containerEl)
-			.setName("Template file")
+			.setName("Template File")
 			.setDesc("Files will be available as templates.")
 			.addSearch(cb => {
 				try {
@@ -95,9 +89,8 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 						this.plugin.saveSettings();
 					});
 			});
-
 		new Setting(containerEl)
-			.setName("Preferred locale")
+			.setName("Preferred Locale")
 			.setDesc("Sets the preferred locale to use when searching for movies.")
 			.addDropdown(dropdown => {
 				const default_locale = "auto";
@@ -117,9 +110,8 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				});
 			});
-
 		new Setting(containerEl)
-			.setName("Open new movie note")
+			.setName("Open New Movie Note")
 			.setDesc("Enable or disable the automatic opening of the note on creation.")
 			.addToggle(toggle =>
 				toggle.setValue(this.plugin.settings.open_page_on_completion).onChange(async value => {
@@ -127,7 +119,6 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				}),
 			);
-
 		new Setting(containerEl)
 			.setName("Service Provider")
 			.setDesc("Choose the service provider you want to use to search your movies.")
@@ -141,29 +132,23 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				});
 			});
+		// API Settings
+		new Setting(containerEl).setName(`${this.plugin.settings.service_provider.toUpperCase()} API`).setHeading();
 
-		const APISettingsChildren: Setting[] = [];
-		createHeader(containerEl, "TMDB API Settings");
-		let temp_key_value = "";
-		APISettingsChildren.push(
+		const APISettings: Setting[] = [];
+		APISettings.push(
 			new Setting(containerEl)
-				.setName("TMDB API Key")
+				.setName("API Key")
 				.setDesc("WARNING: It is not 'Bearer' JSON Web Token (JWT).")
 				.addText(text => {
 					text.inputEl.type = "password";
 					text.setValue(this.plugin.settings.api_key).onChange(async value => {
-						temp_key_value = value;
-					});
-				})
-				.addButton(button => {
-					button.setButtonText("Save Key").onClick(async () => {
-						this.plugin.settings.api_key = temp_key_value;
+						this.plugin.settings.api_key = value;
 						await this.plugin.saveSettings();
-						new Notice("API key saved!");
 					});
 				}),
 		);
-		APISettingsChildren.push(
+		APISettings.push(
 			new Setting(containerEl)
 				.setName("Include Adult")
 				.setDesc("Enable or disable adult content.")
@@ -175,10 +160,4 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 				),
 		);
 	}
-}
-
-function createHeader(container_element: HTMLElement, title: string) {
-	const title_element = document.createDocumentFragment();
-	title_element.createEl("h2", { text: title });
-	return new Setting(container_element).setHeading().setName(title_element);
 }

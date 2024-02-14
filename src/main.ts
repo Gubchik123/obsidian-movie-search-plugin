@@ -1,4 +1,4 @@
-import { MarkdownView, Notice, Plugin, TFile } from "obsidian";
+import { Editor, MarkdownView, Notice, Plugin, TFile, stringifyYaml } from "obsidian";
 
 import { MovieSearchModal } from "@views/movie_search_modal";
 import { MovieSuggestModal } from "@views/movie_suggest_modal";
@@ -15,7 +15,7 @@ import {
 	use_templater_plugin_in_file,
 	execute_inline_scripts_template,
 } from "@utils/template";
-import { replace_variable_syntax, make_file_name_for_, apply_default_frontmatter, to_string_ } from "@utils/utils";
+import { replace_variable_syntax, make_file_name_for_, apply_default_frontmatter } from "@utils/utils";
 
 export default class MovieSearchPlugin extends Plugin {
 	settings: MovieSearchPluginSettings;
@@ -34,13 +34,11 @@ export default class MovieSearchPlugin extends Plugin {
 			name: "Create new movie note",
 			callback: () => this.create_new_movie_note(),
 		});
-
 		this.addCommand({
 			id: "open-movie-search-modal-to-insert",
 			name: "Insert a movie data",
-			callback: () => this.insert_data(),
+			editorCallback: (editor: Editor, view: MarkdownView) => this.insert_data(editor, view.file.basename),
 		});
-
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new MovieSearchSettingTab(this.app, this));
 
@@ -76,10 +74,9 @@ export default class MovieSearchPlugin extends Plugin {
 			const replaced_variable = replace_variable_syntax(movie, apply_template_transformations(template_contents));
 			return execute_inline_scripts_template(movie, replaced_variable);
 		}
-
 		let replaced_variable_frontmatter = replace_variable_syntax(movie, frontmatter); // @deprecated
 		if (use_default_frontmatter) {
-			replaced_variable_frontmatter = to_string_(
+			replaced_variable_frontmatter = stringifyYaml(
 				apply_default_frontmatter(movie, replaced_variable_frontmatter, default_frontmatter_key_type),
 			);
 		}
@@ -90,21 +87,11 @@ export default class MovieSearchPlugin extends Plugin {
 			: replaced_variable_content;
 	}
 
-	async insert_data(): Promise<void> {
+	async insert_data(editor: Editor, file_basename: string): Promise<void> {
 		try {
-			const markdown_view = this.app.workspace.getActiveViewOfType(MarkdownView);
-			if (!markdown_view) {
-				console.warn("Can not find an active markdown view");
-				return;
-			}
-			const movie = await this.search_movie_data(markdown_view.file.basename);
-
-			if (!markdown_view.editor) {
-				console.warn("Can not find editor from the active markdown view");
-				return;
-			}
+			const movie = await this.search_movie_data(file_basename);
 			const renderedContents = await this.get_rendered_contents(movie);
-			markdown_view.editor.replaceRange(renderedContents, { line: 0, ch: 0 });
+			editor.replaceRange(renderedContents, { line: 0, ch: 0 });
 		} catch (err) {
 			console.warn(err);
 			this.show_notice(err);
@@ -117,7 +104,7 @@ export default class MovieSearchPlugin extends Plugin {
 			const rendered_contents = await this.get_rendered_contents(movie);
 
 			// create new File
-			const fileName = make_file_name_for_(movie, this.settings.file_name_format);
+			const fileName = make_file_name_for_(movie);
 			const filePath = `${this.settings.folder}/${fileName}`;
 			const targetFile = await this.app.vault.create(filePath, rendered_contents);
 
@@ -131,7 +118,6 @@ export default class MovieSearchPlugin extends Plugin {
 
 	async open_new_movie_note(target_file: TFile) {
 		if (!this.settings.open_page_on_completion) return;
-
 		// open file
 		const active_leaf = this.app.workspace.getLeaf();
 		if (!active_leaf) {
