@@ -16,8 +16,7 @@ export class MovieSuggestModal extends SuggestModal<Movie> {
 			return (
 				movie.title?.toLowerCase().includes(search_query) ||
 				movie.original_title?.toLowerCase().includes(search_query) ||
-				movie.release_date?.toLowerCase().includes(search_query) ||
-				movie.original_language?.toLowerCase().includes(search_query)
+				movie.release_date?.toLowerCase().includes(search_query)
 			);
 		});
 	}
@@ -25,12 +24,15 @@ export class MovieSuggestModal extends SuggestModal<Movie> {
 	renderSuggestion(movie: Movie, element: HTMLElement) {
 		element.createEl("div", { text: movie.title });
 
+		const media_type = movie.media_type.toUpperCase();
 		const release_date = movie.release_date ? movie.release_date : "-";
 		const original_title = movie.original_title ? movie.original_title : "-";
-		if (release_date !== "-" || (original_title !== "-" && original_title !== movie.title))
-			element.createEl("small", {
-				text: movie.title === original_title ? release_date : `${original_title} (${release_date})`,
-			});
+		element.createEl("small", {
+			text:
+				movie.title === original_title
+					? `${media_type}: ${release_date}`
+					: `${media_type}: ${original_title} (${release_date})`,
+		});
 	}
 
 	onChooseSuggestion(movie: Movie) {

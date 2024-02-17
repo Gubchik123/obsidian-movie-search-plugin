@@ -15,7 +15,7 @@ export class TMDBMoviesAPI implements BaseMoviesAPI {
 
 	async get_by_query(query: string) {
 		try {
-			const search_results = await api_get<TMDBMovieResponse>("https://api.themoviedb.org/3/search/movie", {
+			const search_results = await api_get<TMDBMovieResponse>("https://api.themoviedb.org/3/search/multi", {
 				page: 1,
 				query: query,
 				api_key: this.api_key,
@@ -39,16 +39,19 @@ export class TMDBMoviesAPI implements BaseMoviesAPI {
 
 	create_movie_from_(result: Result): Movie {
 		const movie: Movie = {
-			title: result.title,
-			poster_path: `https://image.tmdb.org/t/p/original${result.poster_path}`,
+			title: result.title || result.name,
+			poster_path: result.poster_path
+				? `https://image.tmdb.org/t/p/original${result.poster_path}`
+				: `https://image.tmdb.org/t/p/original${result.profile_path}`,
 			vote_average: result.vote_average,
-			release_date: result.release_date,
+			release_date: result.release_date || result.first_air_date,
 			overview: result.overview,
 			adult: result.adult,
 			popularity: result.popularity,
-			original_title: result.original_title,
+			original_title: result.original_title || result.original_name,
 			original_language: result.original_language,
 			id: result.id,
+			media_type: result.media_type,
 			genre_ids: result.genre_ids,
 			vote_count: result.vote_count,
 			video: result.video,

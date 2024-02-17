@@ -17,6 +17,7 @@ export interface Movie {
 	original_language: string;
 	// TMDB information
 	id: number;
+	media_type: string;
 	genre_ids: number[];
 	vote_count: number;
 	video: boolean;
