@@ -51,12 +51,17 @@ export class TMDBMoviesAPI implements BaseMoviesAPI {
 			original_title: result.original_title || result.original_name,
 			original_language: result.original_language,
 			id: result.id,
-			media_type: result.media_type,
+			media_type: this.convert_to_title_case_or_upper_case(result.media_type),
 			genre_ids: result.genre_ids,
 			vote_count: result.vote_count,
 			video: result.video,
 			backdrop_path: `https://image.tmdb.org/t/p/original${result.backdrop_path}`,
 		};
 		return movie;
+	}
+
+	convert_to_title_case_or_upper_case(str: string): string {
+		if (str.length > 2) return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() + "s";
+		else return str.toUpperCase();
 	}
 }

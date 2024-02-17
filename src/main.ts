@@ -104,7 +104,7 @@ export default class MovieSearchPlugin extends Plugin {
 			const rendered_contents = await this.get_rendered_contents(movie);
 
 			// create new File
-			const fileName = make_file_name_for_(movie);
+			const fileName = make_file_name_for_(movie, this.settings.file_name_format);
 			const filePath = `${this.settings.folder}/${fileName}`;
 			const targetFile = await this.app.vault.create(filePath, rendered_contents);
 

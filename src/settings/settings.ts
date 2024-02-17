@@ -1,11 +1,14 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
 
+import { replace_date_in_ } from "@utils/utils";
 import { ServiceProvider } from "@src/constants";
 
 import MovieSearchPlugin from "../main";
 
 import { FileSuggest } from "./suggesters/FileSuggester";
 import { FolderSuggest } from "./suggesters/FolderSuggester";
+
+const plugin_repo_url = "https://github.com/Gubchik123/obsidian-movie-search-plugin";
 
 export enum DefaultFrontmatterKeyType {
 	snake_case = "Snake Case",
@@ -14,6 +17,7 @@ export enum DefaultFrontmatterKeyType {
 
 export interface MovieSearchPluginSettings {
 	folder: string; // new file location
+	file_name_format: string; // new file name format
 	template_file: string;
 	open_page_on_completion: boolean;
 	locale_preference: string;
@@ -29,6 +33,7 @@ export interface MovieSearchPluginSettings {
 
 export const DEFAULT_SETTINGS: MovieSearchPluginSettings = {
 	folder: "",
+	file_name_format: "",
 	template_file: "",
 	open_page_on_completion: true,
 	locale_preference: "auto",
@@ -73,9 +78,44 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 						this.plugin.saveSettings();
 					});
 			});
+		// New File Name Format
+		const file_name_format_desc = document.createDocumentFragment();
+		file_name_format_desc.createEl("a", {
+			text: "Variables",
+			href: `${plugin_repo_url}#template-variables-definitions`,
+		});
+		const new_file_name_hint = document.createDocumentFragment().createEl("code", {
+			text: replace_date_in_(this.plugin.settings.file_name_format) || "{{title}}",
+		});
+		new Setting(containerEl)
+			.setClass("movie-search-plugin__settings--new_file_name")
+			.setName("New File Name Format")
+			.setDesc(file_name_format_desc)
+			.addText(cb => {
+				cb.setPlaceholder("Example: {{title}}")
+					.setValue(this.plugin.settings.file_name_format)
+					.onChange(new_value => {
+						this.plugin.settings.file_name_format = new_value?.trim();
+						this.plugin.saveSettings();
+
+						new_file_name_hint.innerHTML = replace_date_in_(new_value) || "{{title}}";
+					});
+			});
+		containerEl
+			.createEl("div", {
+				cls: ["setting-item-description", "movie-search-plugin__settings--new_file_name_hint"],
+			})
+			.append(new_file_name_hint);
+		// Template File
+		const template_file_desc = document.createDocumentFragment();
+		template_file_desc.createDiv({ text: "Files will be available as templates." });
+		template_file_desc.createEl("a", {
+			text: "Example Template",
+			href: `${plugin_repo_url}#example-template`,
+		});
 		new Setting(containerEl)
 			.setName("Template File")
-			.setDesc("Files will be available as templates.")
+			.setDesc(template_file_desc)
 			.addSearch(cb => {
 				try {
 					new FileSuggest(this.app, cb.inputEl);
@@ -136,10 +176,17 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 		new Setting(containerEl).setName(`${this.plugin.settings.service_provider.toUpperCase()} API`).setHeading();
 
 		const APISettings: Setting[] = [];
+
+		const api_key_desc = document.createDocumentFragment();
+		api_key_desc.createDiv({ text: "WARNING: It is not 'Bearer' JSON Web Token (JWT)." });
+		api_key_desc.createEl("a", {
+			text: "Login and get your API Key here.",
+			href: "https://developer.themoviedb.org/login?redirect_uri=/reference/intro/authentication",
+		});
 		APISettings.push(
 			new Setting(containerEl)
 				.setName("API Key")
-				.setDesc("WARNING: It is not 'Bearer' JSON Web Token (JWT).")
+				.setDesc(api_key_desc)
 				.addText(text => {
 					text.inputEl.type = "password";
 					text.setValue(this.plugin.settings.api_key).onChange(async value => {

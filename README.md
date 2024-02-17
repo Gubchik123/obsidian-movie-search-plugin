@@ -89,6 +89,10 @@ yarn build
 
 Set the folder location where the new file is created. Otherwise, a new file is created in the Obsidian Root folder.
 
+### New file name format
+
+Set the format of the new file name. The default is title of the movie.
+
 ### Template file
 
 You can set the template file location. There is an example template at the bottom.
@@ -111,7 +115,7 @@ You can set up the services that you use to search for movies. Only TMDB are ava
 
 Set the API key for TMDB.
 
-> You can get an API key from [TMDB](https://developer.themoviedb.org/v3/reference/intro/authentication#api-key-quick-start).
+> You can get an API key from [TMDB](https://developer.themoviedb.org/login?redirect_uri=/reference/intro/authentication).
 
 > 🚧 **WARNING**
 >
@@ -224,20 +228,21 @@ SORT Vote-average DESC, Title ASC
 
 Please find here a definition of the possible variables to be used in your template. Simply write `{{name}}` in your template, and replace name by the desired movie data, including:
 
-| name              | type              | description                         |
-| ----------------- | ----------------- | ----------------------------------- |
-| title             | string            | The title of the movie.             |
-| poster_path       | string            | The cover image URL of the movie.   |
-| release_date      | string            | The date the movie was published.   |
-| vote_average      | float             | The average vote of the movie.      |
-| overview          | string            | The overview of the movie.          |
-| adult             | boolean           | The adult status of the movie.      |
-| original_title    | string            | The original title of the movie.    |
-| original_language | string            | The original language of the movie. |
-| popularity        | float             | The popularity of the movie.        |
-| id                | float             | The TMDB ID of the movie.           |
-| genre_ids         | array of integers | The genre IDs of the movie.         |
-| vote_count        | integer           | The vote count of the movie.        |
+| name              | type              | description                           |
+| ----------------- | ----------------- | ------------------------------------- |
+| title             | string            | The title of the movie.               |
+| poster_path       | string            | The cover image URL of the movie.     |
+| release_date      | string            | The date the movie was published.     |
+| vote_average      | float             | The average vote of the movie.        |
+| overview          | string            | The overview of the movie.            |
+| adult             | boolean           | The adult status of the movie.        |
+| original_title    | string            | The original title of the movie.      |
+| original_language | string            | The original language of the movie.   |
+| popularity        | float             | The popularity of the movie.          |
+| id                | float             | The TMDB ID of the movie.             |
+| media_type        | string            | It can be 'Movies', 'TV' or 'Person'. |
+| genre_ids         | array of integers | The genre IDs of the movie.           |
+| vote_count        | integer           | The vote count of the movie.          |
 
 <br>
 
