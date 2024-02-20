@@ -63,7 +63,7 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 		containerEl.classList.add("movie-search-plugin__settings");
 		// General Settings
 		new Setting(containerEl)
-			.setName("New File Location")
+			.setName("New file location")
 			.setDesc("New movie notes will be placed here.")
 			.addSearch(cb => {
 				try {
@@ -89,7 +89,7 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 		});
 		new Setting(containerEl)
 			.setClass("movie-search-plugin__settings--new_file_name")
-			.setName("New File Name Format")
+			.setName("New file name format")
 			.setDesc(file_name_format_desc)
 			.addText(cb => {
 				cb.setPlaceholder("Example: {{title}}")
@@ -114,7 +114,7 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 			href: `${plugin_repo_url}#example-template`,
 		});
 		new Setting(containerEl)
-			.setName("Template File")
+			.setName("Template file")
 			.setDesc(template_file_desc)
 			.addSearch(cb => {
 				try {
@@ -130,7 +130,7 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 					});
 			});
 		new Setting(containerEl)
-			.setName("Preferred Locale")
+			.setName("Preferred locale")
 			.setDesc("Sets the preferred locale to use when searching for movies.")
 			.addDropdown(dropdown => {
 				const default_locale = "auto";
@@ -151,7 +151,7 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 				});
 			});
 		new Setting(containerEl)
-			.setName("Open New Movie Note")
+			.setName("Open new movie note")
 			.setDesc("Enable or disable the automatic opening of the note on creation.")
 			.addToggle(toggle =>
 				toggle.setValue(this.plugin.settings.open_page_on_completion).onChange(async value => {
@@ -160,7 +160,7 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 				}),
 			);
 		new Setting(containerEl)
-			.setName("Service Provider")
+			.setName("Service provider")
 			.setDesc("Choose the service provider you want to use to search your movies.")
 			.setClass("movie-search-plugin__settings--service_provider")
 			.addDropdown(dropDown => {
@@ -185,7 +185,7 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 		});
 		APISettings.push(
 			new Setting(containerEl)
-				.setName("API Key")
+				.setName("API key")
 				.setDesc(api_key_desc)
 				.addText(text => {
 					text.inputEl.type = "password";
@@ -197,7 +197,7 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 		);
 		APISettings.push(
 			new Setting(containerEl)
-				.setName("Include Adult")
+				.setName("Include adult")
 				.setDesc("Enable or disable adult content.")
 				.addToggle(toggle =>
 					toggle.setValue(this.plugin.settings.include_adult).onChange(async value => {
