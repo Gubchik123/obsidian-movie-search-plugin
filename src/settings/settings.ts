@@ -110,7 +110,7 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 		const template_file_desc = document.createDocumentFragment();
 		template_file_desc.createDiv({ text: "Files will be available as templates." });
 		template_file_desc.createEl("a", {
-			text: "Example Template",
+			text: "Example template",
 			href: `${plugin_repo_url}#example-template`,
 		});
 		new Setting(containerEl)
