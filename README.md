@@ -33,7 +33,7 @@ Click the link to install the Movie Search plugin: [Install Link](https://obsidi
 
 **OR**
 
-Search in the Obsidian Community plugin. And install it.
+Search in the Obsidian Community plugins. And install it.
 
 <p align="center"><img src="./md_images/install.png" alt="Install image"/></p>
 
