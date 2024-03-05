@@ -1,5 +1,5 @@
 import { ButtonComponent, Modal, Setting, TextComponent, Notice } from "obsidian";
-import { Movie } from "@models/movie.model";
+import { MovieSearch } from "@models/movie.model";
 import { BaseMoviesAPI, get_service_provider } from "@apis/base_api";
 import MovieSearchPlugin from "@src/main";
 
@@ -11,7 +11,7 @@ export class MovieSearchModal extends Modal {
 	constructor(
 		plugin: MovieSearchPlugin,
 		private query: string,
-		private callback: (error: Error | null, result?: Movie[]) => void,
+		private callback: (error: Error | null, result?: MovieSearch[]) => void,
 	) {
 		super(plugin.app);
 		this.service_provider = get_service_provider(plugin.settings);
@@ -29,7 +29,7 @@ export class MovieSearchModal extends Modal {
 		if (!this.isBusy) {
 			try {
 				this.setBusy(true);
-				const searchResults = await this.service_provider.get_by_query(this.query);
+				const searchResults = await this.service_provider.get_movies_by_(this.query);
 				this.setBusy(false);
 
 				if (!searchResults?.length) {

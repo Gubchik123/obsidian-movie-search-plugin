@@ -39,6 +39,9 @@ Search in the Obsidian Community plugins. And install it.
 
 ### Manually (from GitHub)
 
+<details>
+<summary>Steps</summary>
+    
 1. Clone the repository to your Obsidian plugins folder.
 
 ```bash
@@ -58,6 +61,7 @@ yarn build
 ```
 
 4. Reload Obsidian and enable the plugin in the settings.
+ </details>
 
 <br>
 
@@ -84,6 +88,9 @@ yarn build
 ## How to use settings
 
 <p align="center"><img src="./md_images/settings.png" alt="Settings image"/></p>
+
+<details>
+<summary>Options</summary>
 
 ### New file location
 
@@ -121,6 +128,8 @@ Set the API key for TMDB.
 
 Enable or disable the inclusion of adult content in the search results.
 
+</details>
+
 <br>
 
 ## Example template
@@ -129,12 +138,15 @@ Personally I use the following template to create movie notes ;)
 
 > Please also find a definition of the variables used in this template below (look at: [Template variables definitions](#template-variables-definitions)).
 
+<details>
+<summary>templates/Search/Movie.md</summary>
+
 ```markdown
 ---
 created: "{{date:DD.MM.YYYY}} {{time:HH:mm}}"
 tags:
     - Entertainment
-    - Movie
+    - {{ media_type }}
 status: TO WATCH
 cover: "{{poster_path}}"
 ---
@@ -146,11 +158,14 @@ cover: "{{poster_path}}"
 ### 1️⃣ -> Introduction
 
 Title:: {{title}}
+Tagline:: {{tagline}}
 Release-date:: {{release_date}}
-Vote-average:: {{vote_average}}
+Rating:: {{vote_average}}
+Vote-count:: {{vote_count}}
 
 ### 2️⃣ -> Summary
 
+[Homepage]({{homepage}})
 {{overview}}
 
 ### 3️⃣ -> My conclusion
@@ -165,17 +180,24 @@ Adult:: {{adult}}
 Original-title:: {{original_title}}
 Original-language:: {{original_language}}
 Popularity:: {{popularity}}
+Genres:: {{genres}}
+
+Director:: {{director}}
+Main-actors:: {{main_actors}}
+Production-companies:: {{production_companies}}
+Production-countries:: {{production_countries}}
+Spoken-languages:: {{spoken_languages}}
 
 ### 5️⃣ -> TMDB information
 
 ID:: {{id}}
-Genre-IDs:: {{genre_ids}}
-Vote-count:: {{vote_count}}
 
 ![Backdrop]({{backdrop_path}})
 ```
 
 > The idea of the template was taken from the [OB_Template](https://github.com/llZektorll/OB_Template/blob/main/0A_Templates/0A_10_Entertainment/0A_10_2_Movies%26ShowReview.md). Look through the repository for more examples.
+
+</details>
 
 <br>
 
@@ -184,6 +206,9 @@ Vote-count:: {{vote_count}}
 <p align="center"><img src="./md_images/dataview.png" alt="Dataview image"/></p>
 
 Here is the dataview query used in the demo
+
+<details>
+<summary>Examples</summary>
 
 ### List of watched movies
 
@@ -218,33 +243,51 @@ SORT Vote-average DESC, Title ASC
 ```
 ````
 
+</details>
+
 <br>
 
 ## Template variables definitions
 
 Please find here a definition of the possible variables to be used in your template. Simply write `{{name}}` in your template, and replace name by the desired movie data, including:
 
-| name              | type              | description                           |
-| ----------------- | ----------------- | ------------------------------------- |
-| title             | string            | The title of the movie.               |
-| poster_path       | string            | The cover image URL of the movie.     |
-| release_date      | string            | The date the movie was published.     |
-| vote_average      | float             | The average vote of the movie.        |
-| overview          | string            | The overview of the movie.            |
-| adult             | boolean           | The adult status of the movie.        |
-| original_title    | string            | The original title of the movie.      |
-| original_language | string            | The original language of the movie.   |
-| popularity        | float             | The popularity of the movie.          |
-| id                | float             | The TMDB ID of the movie.             |
-| media_type        | string            | It can be 'Movies', 'TV' or 'Person'. |
-| genre_ids         | array of integers | The genre IDs of the movie.           |
-| vote_count        | integer           | The vote count of the movie.          |
+<details>
+<summary>Table</summary>
+
+| name                 | type    | description                            |
+| -------------------- | ------- | -------------------------------------- |
+| adult                | boolean | The adult status of the movie.         |
+| backdrop_path        | string  | The backdrop image URL of the movie.   |
+| main_actors          | string  | The main actors of the movie.          |
+| media_type           | string  | It can be 'Movies' or 'TV'.            |
+| director             | string  | The director of the movie.             |
+| genres               | string  | The genres of the movie.               |
+| homepage             | string  | The homepage of the movie.             |
+| id                   | integer | The TMDB ID of the movie.              |
+| original_language    | string  | The original language of the movie.    |
+| original_title       | string  | The original title of the movie.       |
+| overview             | string  | The overview of the movie.             |
+| popularity           | float   | The popularity of the movie.           |
+| poster_path          | string  | The cover image URL of the movie.      |
+| production_companies | string  | The production companies of the movie. |
+| production_countries | string  | The production countries of the movie. |
+| release_date         | string  | The date the movie was published.      |
+| spoken_languages     | string  | The spoken languages of the movie.     |
+| tagline              | string  | The tagline of the movie.              |
+| title                | string  | The title of the movie.                |
+| vote_average         | float   | The average vote of the movie.         |
+| vote_count           | integer | The vote count of the movie.           |
+
+</details>
 
 <br>
 
 ## Advanced
 
 ### Inline Script
+
+<details>
+<summary>Examples</summary>
 
 #### To print out a movie object:
 
@@ -262,15 +305,17 @@ or
 ```
 ````
 
-#### When you want to list or link genre IDs:
+#### When you want to list or link genres:
 
 ```
 ---
-Genre-IDs: <%=movie.genre_ids.map(genre_id=>`\n  - ${genre_id}`).join('')%>
+Genres: <%=movie.genres.map(genre=>`\n  - ${genre}`).join('')%>
 ---
 
-Genre-IDs: <%=movie.genre_ids.map(genre_id => `[[Genre/${genre_id}]]`).join(', ')%>
+Genres: <%=movie.genres.map(genre => `[[Genre/${genre}]]`).join(', ')%>
 ```
+
+</details>
 
 <br>
 

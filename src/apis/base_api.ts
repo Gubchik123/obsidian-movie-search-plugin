@@ -1,11 +1,12 @@
 import { requestUrl } from "obsidian";
-import { Movie } from "@models/movie.model";
 import { ServiceProvider } from "@src/constants";
+import { MovieSearch, Movie } from "@models/movie.model";
 import { MovieSearchPluginSettings } from "@settings/settings";
 import { TMDBMoviesAPI } from "./tmdb_movies_api";
 
 export interface BaseMoviesAPI {
-	get_by_query(query: string): Promise<Movie[]>;
+	get_movies_by_(query: string): Promise<MovieSearch[]>;
+	get_movie_by_(id: number, media_type: string): Promise<Movie>;
 }
 
 export function get_service_provider(settings: MovieSearchPluginSettings): BaseMoviesAPI {

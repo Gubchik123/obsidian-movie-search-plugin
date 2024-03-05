@@ -3,7 +3,8 @@ import { Editor, MarkdownView, Notice, Plugin, TFile, stringifyYaml } from "obsi
 import { MovieSearchModal } from "@views/movie_search_modal";
 import { MovieSuggestModal } from "@views/movie_suggest_modal";
 import { CursorJumper } from "@utils/cursor_jumper";
-import { Movie } from "@models/movie.model";
+import { MovieSearch, Movie } from "@models/movie.model";
+import { get_service_provider } from "@apis/base_api";
 import {
 	MovieSearchSettingTab,
 	MovieSearchPluginSettings as MovieSearchPluginSettings,
@@ -55,9 +56,14 @@ export default class MovieSearchPlugin extends Plugin {
 		}
 	}
 
-	async search_movie_data(query?: string): Promise<Movie> {
-		const searchedMovies = await this.open_movie_search_modal(query);
-		return await this.open_movie_suggest_modal(searchedMovies);
+	async get_movie_search_data(query?: string): Promise<MovieSearch> {
+		const searched_movies = await this.open_movie_search_modal(query);
+		return await this.open_movie_suggest_modal(searched_movies);
+	}
+
+	async get_movie_data(movie_search: MovieSearch): Promise<Movie> {
+		const service_provider = get_service_provider(this.settings);
+		return await service_provider.get_movie_by_(movie_search.id, movie_search.media_type);
 	}
 
 	async get_rendered_contents(movie: Movie) {
@@ -89,9 +95,10 @@ export default class MovieSearchPlugin extends Plugin {
 
 	async insert_data(editor: Editor, file_basename: string): Promise<void> {
 		try {
-			const movie = await this.search_movie_data(file_basename);
-			const renderedContents = await this.get_rendered_contents(movie);
-			editor.replaceRange(renderedContents, { line: 0, ch: 0 });
+			const movie_search = await this.get_movie_search_data(file_basename);
+			const movie = await this.get_movie_data(movie_search);
+			const rendered_contents = await this.get_rendered_contents(movie);
+			editor.replaceRange(rendered_contents, { line: 0, ch: 0 });
 		} catch (err) {
 			console.warn(err);
 			this.show_notice(err);
@@ -100,13 +107,14 @@ export default class MovieSearchPlugin extends Plugin {
 
 	async create_new_movie_note(): Promise<void> {
 		try {
-			const movie = await this.search_movie_data();
+			const movie_search = await this.get_movie_search_data();
+			const movie = await this.get_movie_data(movie_search);
 			const rendered_contents = await this.get_rendered_contents(movie);
 
 			// create new File
-			const fileName = make_file_name_for_(movie, this.settings.file_name_format);
-			const filePath = `${this.settings.folder}/${fileName}`;
-			const targetFile = await this.app.vault.create(filePath, rendered_contents);
+			const file_name = make_file_name_for_(movie, this.settings.file_name_format);
+			const file_path = `${this.settings.folder}/${file_name}`;
+			const targetFile = await this.app.vault.create(file_path, rendered_contents);
 
 			await use_templater_plugin_in_file(this.app, targetFile);
 			this.open_new_movie_note(targetFile);
@@ -130,7 +138,7 @@ export default class MovieSearchPlugin extends Plugin {
 		await new CursorJumper(this.app).jump_to_next_cursor_location();
 	}
 
-	async open_movie_search_modal(query = ""): Promise<Movie[]> {
+	async open_movie_search_modal(query = ""): Promise<MovieSearch[]> {
 		return new Promise((resolve, reject) => {
 			return new MovieSearchModal(this, query, (error, results) => {
 				return error ? reject(error) : resolve(results);
@@ -138,7 +146,7 @@ export default class MovieSearchPlugin extends Plugin {
 		});
 	}
 
-	async open_movie_suggest_modal(movies: Movie[]): Promise<Movie> {
+	async open_movie_suggest_modal(movies: MovieSearch[]): Promise<MovieSearch> {
 		return new Promise((resolve, reject) => {
 			return new MovieSuggestModal(this.app, movies, (error, selected_movie) => {
 				return error ? reject(error) : resolve(selected_movie);

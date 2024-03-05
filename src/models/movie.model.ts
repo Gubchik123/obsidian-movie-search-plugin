@@ -2,25 +2,34 @@ export interface Frontmatter {
 	[key: string]: string | string[];
 }
 
-export interface Movie {
-	// Introduction
-	title: string;
-	poster_path: string;
-	vote_average: number;
-	release_date: string;
-	// Summary
-	overview: string;
-	// Global Information
-	adult: boolean;
-	popularity: number;
-	original_title: string;
-	original_language: string;
-	// TMDB information
+export interface MovieSearch {
 	id: number;
 	media_type: string;
-	genre_ids: number[];
-	vote_count: number;
-	video: boolean;
-	// Backdrop
+	original_title: string;
+	release_date: string;
+	title: string;
+}
+
+export interface Movie {
+	adult: boolean;
 	backdrop_path: string;
+	main_actors: string[];
+	media_type: string;
+	director: string;
+	genres: string[];
+	homepage: string;
+	id: number;
+	original_language: string;
+	original_title: string;
+	overview: string;
+	popularity: number;
+	poster_path: string;
+	production_companies: string[];
+	production_countries: string[];
+	release_date: string;
+	spoken_languages: string[];
+	tagline: string;
+	title: string;
+	vote_average: number;
+	vote_count: number;
 }

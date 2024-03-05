@@ -1,16 +1,16 @@
 import { App, SuggestModal } from "obsidian";
-import { Movie } from "@models/movie.model";
+import { MovieSearch } from "@models/movie.model";
 
-export class MovieSuggestModal extends SuggestModal<Movie> {
+export class MovieSuggestModal extends SuggestModal<MovieSearch> {
 	constructor(
 		app: App,
-		private readonly suggestion: Movie[],
-		private onChoose: (error: Error | null, result?: Movie) => void,
+		private readonly suggestion: MovieSearch[],
+		private onChoose: (error: Error | null, result?: MovieSearch) => void,
 	) {
 		super(app);
 	}
 
-	getSuggestions(query: string): Movie[] {
+	getSuggestions(query: string): MovieSearch[] {
 		return this.suggestion.filter(movie => {
 			const search_query = query?.toLowerCase();
 			return (
@@ -21,7 +21,7 @@ export class MovieSuggestModal extends SuggestModal<Movie> {
 		});
 	}
 
-	renderSuggestion(movie: Movie, element: HTMLElement) {
+	renderSuggestion(movie: MovieSearch, element: HTMLElement) {
 		element.createEl("div", { text: movie.title });
 
 		const media_type = movie.media_type.toUpperCase();
@@ -35,7 +35,7 @@ export class MovieSuggestModal extends SuggestModal<Movie> {
 		});
 	}
 
-	onChooseSuggestion(movie: Movie) {
+	onChooseSuggestion(movie: MovieSearch) {
 		this.onChoose(null, movie);
 	}
 }

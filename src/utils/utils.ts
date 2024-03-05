@@ -1,6 +1,6 @@
 import { parseYaml } from "obsidian";
-import { Movie, Frontmatter } from "@models/movie.model";
 import { DefaultFrontmatterKeyType } from "@settings/settings";
+import { Frontmatter, Movie } from "@models/movie.model";
 
 export const NUMBER_REGEX = /^-?[0-9]*$/;
 export const DATE_REGEX = /{{DATE(\+-?[0-9]+)?}}/;
