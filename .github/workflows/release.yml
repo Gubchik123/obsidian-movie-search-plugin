@@ -30,33 +30,34 @@ jobs:
                   ls
                   echo "::set-output name=tag_name::$(git tag --sort version:refname | tail -n 1)"
 
-            - name: Extract branch name
+            - name: Get version
+              id: package
+              run: |
+                  echo "::set-output name=version::$(node -p "require('./package.json').version")"
               shell: bash
-              run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-              id: extract_branch
 
             - name: Create Release
               id: create_release
               uses: actions/create-release@v1
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  VERSION: ${{ steps.extract_branch.outputs.branch }}
+                  VERSION: ${{ steps.package.outputs.version }}
               with:
-                  tag_name: ${{ steps.extract_branch.outputs.branch }}
-                  release_name: Release ${{ steps.extract_branch.outputs.branch }}
+                  tag_name: ${{ steps.package.outputs.version }}
+                  release_name: ${{ steps.package.outputs.version }} release
                   draft: false
                   prerelease: false
 
-            - name: Upload zip file
-              id: upload-zip
-              uses: actions/upload-release-asset@v1
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                  upload_url: ${{ steps.create_release.outputs.upload_url }}
-                  asset_path: ./${{ env.PLUGIN_NAME }}.zip
-                  asset_name: ${{ env.PLUGIN_NAME }}-${{ steps.build.outputs.tag_name }}.zip
-                  asset_content_type: application/zip
+            # - name: Upload zip file
+            #   id: upload-zip
+            #   uses: actions/upload-release-asset@v1
+            #   env:
+            #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            #   with:
+            #       upload_url: ${{ steps.create_release.outputs.upload_url }}
+            #       asset_path: ./${{ env.PLUGIN_NAME }}.zip
+            #       asset_name: ${{ env.PLUGIN_NAME }}-${{ steps.build.outputs.tag_name }}.zip
+            #       asset_content_type: application/zip
 
             - name: Upload main.js
               id: upload-main
