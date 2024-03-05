@@ -10,7 +10,7 @@ env:
 
 jobs:
     build:
-        runs-on: ubuntu-20.04
+        runs-on: ubuntu-latest
 
         steps:
             - uses: actions/checkout@v3
@@ -30,15 +30,20 @@ jobs:
                   ls
                   echo "::set-output name=tag_name::$(git tag --sort version:refname | tail -n 1)"
 
+            - name: Extract branch name
+              shell: bash
+              run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+              id: extract_branch
+
             - name: Create Release
               id: create_release
               uses: actions/create-release@v1
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  VERSION: ${{ github.ref }}
+                  VERSION: ${{ steps.extract_branch.outputs.branch }}
               with:
-                  tag_name: ${{ github.ref }}
-                  release_name: ${{ github.ref }}
+                  tag_name: ${{ steps.extract_branch.outputs.branch }}
+                  release_name: Release ${{ steps.extract_branch.outputs.branch }}
                   draft: false
                   prerelease: false
 
