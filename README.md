@@ -124,6 +124,8 @@ Set the API key for TMDB.
 
 > You can get an API key from [developer.themoviedb.org](https://developer.themoviedb.org/reference/intro/authentication).
 
+> You can use both "Access Token Auth" (JWT) and "API Key Auth".
+
 ##### Include adult
 
 Enable or disable the inclusion of adult content in the search results.
@@ -146,7 +148,7 @@ Personally I use the following template to create movie notes ;)
 created: "{{date:DD.MM.YYYY}} {{time:HH:mm}}"
 tags:
     - Entertainment
-    - {{ media_type }}
+    - { { media_type } }
 status: TO WATCH
 cover: "{{poster_path}}"
 ---
