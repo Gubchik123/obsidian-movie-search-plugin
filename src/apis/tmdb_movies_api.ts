@@ -15,13 +15,27 @@ export class TMDBMoviesAPI implements BaseMoviesAPI {
 
 	async get_by_query(query: string) {
 		try {
-			const search_results = await api_get<TMDBMovieResponse>("https://api.themoviedb.org/3/search/multi", {
+			const params = {
 				page: 1,
 				query: query,
-				api_key: this.api_key,
 				include_adult: this.include_adult,
 				language: this.locale_preference === "auto" ? this.get_language_by_(query) : this.locale_preference,
-			});
+			};
+			const headers = {};
+			// If the given API key is JWT
+			if (this.api_key.length > 32) {
+				const splited_api_key = this.api_key.split(" ");
+				headers["Authorization"] =
+					splited_api_key.length > 1
+						? `Bearer ${splited_api_key[splited_api_key.length - 1]}`
+						: `Bearer ${this.api_key}`;
+			} else params["api_key"] = this.api_key;
+
+			const search_results = await api_get<TMDBMovieResponse>(
+				"https://api.themoviedb.org/3/search/multi",
+				params,
+				headers,
+			);
 			if (!search_results?.total_results) return [];
 			return search_results.results.map(result => this.create_movie_from_(result));
 		} catch (error) {

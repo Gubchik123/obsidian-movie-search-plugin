@@ -2,8 +2,8 @@ name: Release Obsidian plugin
 
 on:
     push:
-        tags:
-            - "*"
+        branches:
+            - master
 
 env:
     PLUGIN_NAME: movie-search

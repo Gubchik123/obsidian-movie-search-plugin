@@ -115,11 +115,7 @@ You can set up the services that you use to search for movies. Only TMDB are ava
 
 Set the API key for TMDB.
 
-> You can get an API key from [TMDB](https://developer.themoviedb.org/login?redirect_uri=/reference/intro/authentication).
-
-> 🚧 **WARNING**
->
-> API key is not 'Bearer' JSON Web Token (JWT).
+> You can get an API key from [developer.themoviedb.org](https://developer.themoviedb.org/reference/intro/authentication).
 
 ##### Include adult
 

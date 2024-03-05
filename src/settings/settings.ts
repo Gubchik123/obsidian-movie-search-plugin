@@ -178,10 +178,9 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 		const APISettings: Setting[] = [];
 
 		const api_key_desc = document.createDocumentFragment();
-		api_key_desc.createDiv({ text: "WARNING: It is not 'Bearer' JSON Web Token (JWT)." });
 		api_key_desc.createEl("a", {
 			text: "Login and get your API Key here.",
-			href: "https://developer.themoviedb.org/login?redirect_uri=/reference/intro/authentication",
+			href: "https://developer.themoviedb.org/reference/intro/authentication",
 		});
 		APISettings.push(
 			new Setting(containerEl)
