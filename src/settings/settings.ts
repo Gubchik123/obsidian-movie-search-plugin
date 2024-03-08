@@ -150,6 +150,7 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				});
 			});
+		// TODO: new Setting (toggle) - Ask preferred locale (before searching for movies)
 		new Setting(containerEl)
 			.setName("Open new movie note")
 			.setDesc("Enable or disable the automatic opening of the note on creation.")

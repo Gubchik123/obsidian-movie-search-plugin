@@ -48,6 +48,7 @@ export interface TMDBMovieResponse {
 	name: string;
 	vote_average: number;
 	vote_count: number;
+    // TODO: Add 'videos' field.
 }
 
 interface Actor {

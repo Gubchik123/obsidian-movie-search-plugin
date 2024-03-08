@@ -58,6 +58,7 @@ export default class MovieSearchPlugin extends Plugin {
 
 	async get_movie_search_data(query?: string): Promise<MovieSearch> {
 		const searched_movies = await this.open_movie_search_modal(query);
+		// TODO: Return the first movie if the user query is the same as the first movie's title.
 		return await this.open_movie_suggest_modal(searched_movies);
 	}
 
@@ -95,6 +96,7 @@ export default class MovieSearchPlugin extends Plugin {
 
 	async insert_data(editor: Editor, file_basename: string): Promise<void> {
 		try {
+			// TODO: Use the selected text as a search query.
 			const movie_search = await this.get_movie_search_data(file_basename);
 			const movie = await this.get_movie_data(movie_search);
 			const rendered_contents = await this.get_rendered_contents(movie);
@@ -110,14 +112,15 @@ export default class MovieSearchPlugin extends Plugin {
 			const movie_search = await this.get_movie_search_data();
 			const movie = await this.get_movie_data(movie_search);
 			const rendered_contents = await this.get_rendered_contents(movie);
-
-			// create new File
+			// Create new file.
+			// TODO: If the same file exists, ask if user want to overwrite it.
 			const file_name = make_file_name_for_(movie, this.settings.file_name_format);
+			// TODO: Allow variables in the folder name (make_folder_name_for_).
 			const file_path = `${this.settings.folder}/${file_name}`;
-			const targetFile = await this.app.vault.create(file_path, rendered_contents);
+			const target_file = await this.app.vault.create(file_path, rendered_contents);
 
-			await use_templater_plugin_in_file(this.app, targetFile);
-			this.open_new_movie_note(targetFile);
+			await use_templater_plugin_in_file(this.app, target_file);
+			this.open_new_movie_note(target_file);
 		} catch (err) {
 			console.warn(err);
 			this.show_notice(err);
