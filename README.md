@@ -112,21 +112,17 @@ Set the preferred locale for the movie search. The default is 'auto', which mean
 
 Enable or disable the opening of the new movie note after creation.
 
-### Service Provider
+### TMDB Settings
 
-You can set up the services that you use to search for movies. Only TMDB are available now.
-
-#### TMDB API Settings
-
-##### TMDB API Key
+#### API Key
 
 Set the API key for TMDB.
 
 > You can get an API key from [developer.themoviedb.org](https://developer.themoviedb.org/reference/intro/authentication).
 
-> You can use both "Access Token Auth" (JWT) and "API Key Auth".
+> You can use either "Access Token Auth" (JWT) or "API Key Auth".
 
-##### Include adult
+#### Include adult
 
 Enable or disable the inclusion of adult content in the search results.
 

@@ -159,21 +159,8 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				}),
 			);
-		new Setting(containerEl)
-			.setName("Service provider")
-			.setDesc("Choose the service provider you want to use to search your movies.")
-			.setClass("movie-search-plugin__settings--service_provider")
-			.addDropdown(dropDown => {
-				dropDown.addOption(ServiceProvider.tmdb, ServiceProvider.tmdb);
-				dropDown.setValue(this.plugin.settings?.service_provider ?? ServiceProvider.tmdb);
-				dropDown.onChange(async value => {
-					const new_value = value as ServiceProvider;
-					this.settings["service_provider"] = new_value;
-					await this.plugin.saveSettings();
-				});
-			});
 		// API Settings
-		new Setting(containerEl).setName(`${this.plugin.settings.service_provider.toUpperCase()} API`).setHeading();
+		new Setting(containerEl).setName("TMDB").setHeading();
 
 		const APISettings: Setting[] = [];
 
