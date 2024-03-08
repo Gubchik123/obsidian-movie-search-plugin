@@ -84,11 +84,9 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 			text: "Variables",
 			href: `${plugin_repo_url}#template-variables-definitions`,
 		});
-		const new_file_name_hint = document.createDocumentFragment().createEl("code", {
-			text: replace_date_in_(this.plugin.settings.file_name_format) || "{{title}}",
-		});
 		new Setting(containerEl)
 			.setClass("movie-search-plugin__settings--new_file_name")
+			.setClass("movie-search-plugin__settings--new_file_name_hint")
 			.setName("New file name format")
 			.setDesc(file_name_format_desc)
 			.addText(cb => {
@@ -97,15 +95,8 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 					.onChange(new_value => {
 						this.plugin.settings.file_name_format = new_value?.trim();
 						this.plugin.saveSettings();
-
-						new_file_name_hint.innerHTML = replace_date_in_(new_value) || "{{title}}";
 					});
 			});
-		containerEl
-			.createEl("div", {
-				cls: ["setting-item-description", "movie-search-plugin__settings--new_file_name_hint"],
-			})
-			.append(new_file_name_hint);
 		// Template File
 		const template_file_desc = document.createDocumentFragment();
 		template_file_desc.createDiv({ text: "Files will be available as templates." });

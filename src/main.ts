@@ -16,7 +16,12 @@ import {
 	use_templater_plugin_in_file,
 	execute_inline_scripts_template,
 } from "@utils/template";
-import { replace_variable_syntax, make_file_name_for_, apply_default_frontmatter } from "@utils/utils";
+import {
+	replace_variable_syntax,
+	make_file_name_for_,
+	make_folder_path_for_,
+	apply_default_frontmatter,
+} from "@utils/utils";
 
 export default class MovieSearchPlugin extends Plugin {
 	settings: MovieSearchPluginSettings;
@@ -113,10 +118,8 @@ export default class MovieSearchPlugin extends Plugin {
 			const movie = await this.get_movie_data(movie_search);
 			const rendered_contents = await this.get_rendered_contents(movie);
 			// Create new file.
+			const file_path = await this.get_file_path_for_(movie);
 			// TODO: If the same file exists, ask if user want to overwrite it.
-			const file_name = make_file_name_for_(movie, this.settings.file_name_format);
-			// TODO: Allow variables in the folder name (make_folder_name_for_).
-			const file_path = `${this.settings.folder}/${file_name}`;
 			const target_file = await this.app.vault.create(file_path, rendered_contents);
 
 			await use_templater_plugin_in_file(this.app, target_file);
@@ -125,6 +128,17 @@ export default class MovieSearchPlugin extends Plugin {
 			console.warn(err);
 			this.show_notice(err);
 		}
+	}
+
+	private async get_file_path_for_(movie: Movie): Promise<string> {
+		const file_name = make_file_name_for_(movie, this.settings.file_name_format);
+		const folder_path = make_folder_path_for_(movie, this.settings.folder);
+		try {
+			await this.app.vault.createFolder(folder_path);
+		} catch (err) {
+			console.warn(err);
+		}
+		return `${folder_path}/${file_name}`;
 	}
 
 	async open_new_movie_note(target_file: TFile) {

@@ -16,6 +16,11 @@ export function make_file_name_for_(movie: Movie, file_name_format?: string) {
 	return replace_illegal_file_name_characters_in_(result) + ".md";
 }
 
+export function make_folder_path_for_(movie: Movie, folder_path: string) {
+	const result: string = replace_variable_syntax(movie, folder_path);
+	return replace_illegal_file_name_characters_in_(result);
+}
+
 export function change_snake_case(movie: Movie) {
 	return Object.entries(movie).reduce((acc, [key, value]) => {
 		acc[camel_to_snake_case(key)] = value;
