@@ -40,7 +40,7 @@ Search in the Obsidian Community plugins. And install it.
 ### Manually (from GitHub)
 
 <details>
-<summary>Steps</summary>
+<summary><h4 style="display: inline-block;">Steps</h4></summary>
     
 1. Clone the repository to your Obsidian plugins folder.
 
@@ -90,7 +90,7 @@ yarn build
 <p align="center"><img src="./md_images/settings.png" alt="Settings image"/></p>
 
 <details>
-<summary>Options</summary>
+<summary><h3 style="display: inline-block;">Options</h3></summary>
 
 ### New file location
 
@@ -137,7 +137,7 @@ Personally I use the following template to create movie notes ;)
 > Please also find a definition of the variables used in this template below (look at: [Template variables definitions](#template-variables-definitions)).
 
 <details>
-<summary>templates/Search/Movie.md</summary>
+<summary><h3 style="display: inline-block;">templates/Search/Movie.md</h3></summary>
 
 ```markdown
 ---
@@ -147,6 +147,7 @@ tags:
     - { { media_type } }
 status: TO WATCH
 cover: "{{poster_path}}"
+banner: "{{backdrop_path}}"
 ---
 
 ## 📺 -> {{title}}
@@ -190,10 +191,12 @@ Spoken-languages:: {{spoken_languages}}
 
 ID:: {{id}}
 
-![Backdrop]({{backdrop_path}})
+![Backdrop]({{youtube_url}})
 ```
 
 > The idea of the template was taken from the [OB_Template](https://github.com/llZektorll/OB_Template/blob/main/0A_Templates/0A_10_Entertainment/0A_10_2_Movies%26ShowReview.md). Look through the repository for more examples.
+
+> I use the Obsidian plugin [Banners](https://obsidian.md/plugins?id=obsidian-banners) (in the note properties) to display the backdrop image.
 
 </details>
 
@@ -206,7 +209,7 @@ ID:: {{id}}
 Here is the dataview query used in the demo
 
 <details>
-<summary>Examples</summary>
+<summary><h3 style="display: inline-block;">Examples</h3></summary>
 
 ### List of watched movies
 
@@ -250,7 +253,7 @@ SORT Vote-average DESC, Title ASC
 Please find here a definition of the possible variables to be used in your template. Simply write `{{name}}` in your template, and replace name by the desired movie data, including:
 
 <details>
-<summary>Table</summary>
+<summary><h3 style="display: inline-block;">Table</h3></summary>
 
 | name                 | type    | description                            |
 | -------------------- | ------- | -------------------------------------- |
@@ -275,6 +278,7 @@ Please find here a definition of the possible variables to be used in your templ
 | title                | string  | The title of the movie.                |
 | vote_average         | float   | The average vote of the movie.         |
 | vote_count           | integer | The vote count of the movie.           |
+| youtube_url          | string  | The youtube trailer URL of the movie.  |
 
 </details>
 
@@ -285,7 +289,7 @@ Please find here a definition of the possible variables to be used in your templ
 ### Inline Script
 
 <details>
-<summary>Examples</summary>
+<summary><h4 style="display: inline-block;">Examples</h4></summary>
 
 #### To print out a movie object:
 

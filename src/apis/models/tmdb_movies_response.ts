@@ -48,7 +48,9 @@ export interface TMDBMovieResponse {
 	name: string;
 	vote_average: number;
 	vote_count: number;
-    // TODO: Add 'videos' field.
+	videos: {
+		results: Video[];
+	};
 }
 
 interface Actor {
@@ -78,4 +80,11 @@ interface ProductionCountry {
 interface SpokenLanguage {
 	iso_639_1: string;
 	name: string;
+}
+
+export interface Video {
+	name: string;
+	key: string;
+	site: string;
+	type: string;
 }

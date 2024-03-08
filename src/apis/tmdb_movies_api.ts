@@ -2,7 +2,12 @@ import LanguageDetect from "languagedetect";
 
 import { MovieSearch, Movie } from "@models/movie.model";
 import { api_get, BaseMoviesAPI } from "@apis/base_api";
-import { TMDBMovieSearchResponse, TMDBMovieSearchResult, TMDBMovieResponse } from "./models/tmdb_movies_response";
+import {
+	TMDBMovieSearchResponse,
+	TMDBMovieSearchResult,
+	TMDBMovieResponse,
+	Video,
+} from "./models/tmdb_movies_response";
 
 let language: string;
 const language_detector = new LanguageDetect();
@@ -52,8 +57,8 @@ export class TMDBMoviesAPI implements BaseMoviesAPI {
 	async get_movie_by_(id: number, media_type: string) {
 		try {
 			const params = {
-				append_to_response: "credits",
 				language: language,
+				append_to_response: "videos,credits",
 			};
 			const headers = {};
 			// If the given API key is JWT
@@ -77,18 +82,18 @@ export class TMDBMoviesAPI implements BaseMoviesAPI {
 		}
 	}
 
-	get_language_by_(query: string): string {
+	private get_language_by_(query: string): string {
 		const detected_languages = language_detector.detect(query, 3);
 
 		if (detected_languages.length) return detected_languages[0][0].slice(0, 2);
 		return window.moment.locale() || "en";
 	}
 
-	convert_to_lower_case(media_type: string): string {
+	private convert_to_lower_case(media_type: string): string {
 		return media_type === "Movie" ? "movie" : "tv";
 	}
 
-	create_movie_search_from_(result: TMDBMovieSearchResult): MovieSearch {
+	private create_movie_search_from_(result: TMDBMovieSearchResult): MovieSearch {
 		const movie_search: MovieSearch = {
 			id: result.id,
 			title: result.title || result.name,
@@ -99,11 +104,11 @@ export class TMDBMoviesAPI implements BaseMoviesAPI {
 		return movie_search;
 	}
 
-	convert_to_title_case(media_type: string): string {
+	private convert_to_title_case(media_type: string): string {
 		return media_type === "movie" ? "Movie" : "TV";
 	}
 
-	create_movie_from_(response: TMDBMovieResponse, media_type: string): Movie {
+	private create_movie_from_(response: TMDBMovieResponse, media_type: string): Movie {
 		const movie: Movie = {
 			adult: response.adult,
 			backdrop_path: `https://image.tmdb.org/t/p/original${response.backdrop_path}`,
@@ -130,7 +135,27 @@ export class TMDBMoviesAPI implements BaseMoviesAPI {
 			title: response.title || response.name,
 			vote_average: response.vote_average,
 			vote_count: response.vote_count,
+			youtube_url: this.get_youtube_url_from_(response.videos.results),
 		};
 		return movie;
+	}
+
+	private get_youtube_url_from_(videos: Video[]): string {
+		const youtube_videos = videos.filter(video => video.site === "YouTube");
+
+		if (youtube_videos.length) {
+			const trailer = youtube_videos.find(video => video.type === "Trailer");
+			if (trailer) return `https://www.youtube.com/watch?v=${trailer.key}`;
+
+			const clip = youtube_videos.find(video => video.type === "Clip");
+			if (clip) return `https://www.youtube.com/watch?v=${clip.key}`;
+
+			const featurette = youtube_videos.find(video => video.type === "Featurette");
+			if (featurette) return `https://www.youtube.com/watch?v=${featurette.key}`;
+
+			const teaser = youtube_videos.find(video => video.type === "Teaser");
+			if (teaser) return `https://www.youtube.com/watch?v=${teaser.key}`;
+		}
+		return "";
 	}
 }
