@@ -58,8 +58,8 @@ export default class MovieSearchPlugin extends Plugin {
 
 	async get_movie_search_data(query?: string): Promise<MovieSearch> {
 		const searched_movies = await this.open_movie_search_modal(query);
-		// TODO: Return the first movie if the user query is the same as the first movie's title.
-		return await this.open_movie_suggest_modal(searched_movies);
+        if (searched_movies.length == 1) return searched_movies[0];
+	    return await this.open_movie_suggest_modal(searched_movies);
 	}
 
 	async get_movie_data(movie_search: MovieSearch): Promise<Movie> {
