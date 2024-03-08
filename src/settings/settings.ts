@@ -1,6 +1,5 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
 
-import { replace_date_in_ } from "@utils/utils";
 import { ServiceProvider } from "@src/constants";
 
 import MovieSearchPlugin from "../main";
