@@ -2,7 +2,6 @@
 _Easily create movie notes._
 
 ![GitHub release](https://img.shields.io/github/v/release/Gubchik123/obsidian-movie-search-plugin?sort=semver)
-[![GitHub Pages](https://github.com/Gubchik123/obsidian-movie-search-plugin/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Gubchik123/obsidian-movie-search-plugin/actions/workflows/pages/pages-build-deployment)
 
 <br>
 
@@ -144,7 +143,7 @@ Personally I use the following template to create movie notes ;)
 created: "{{date:DD.MM.YYYY}} {{time:HH:mm}}"
 tags:
     - Entertainment
-    - { { media_type } }
+    - {{media_type}}
 status: TO WATCH
 cover: "{{poster_path}}"
 banner: "{{backdrop_path}}"
