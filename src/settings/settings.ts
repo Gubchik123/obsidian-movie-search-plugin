@@ -20,6 +20,7 @@ export interface MovieSearchPluginSettings {
 	template_file: string;
 	open_page_on_completion: boolean;
 	locale_preference: string;
+	ask_preferred_locale: boolean; // TODO: Add recently used locales
 	service_provider: ServiceProvider;
 	api_key: string;
 	include_adult: boolean;
@@ -36,6 +37,7 @@ export const DEFAULT_SETTINGS: MovieSearchPluginSettings = {
 	template_file: "",
 	open_page_on_completion: true,
 	locale_preference: "auto",
+	ask_preferred_locale: false,
 	service_provider: ServiceProvider.tmdb,
 	api_key: "",
 	include_adult: false,
@@ -140,7 +142,15 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				});
 			});
-		// TODO: new Setting (toggle) - Ask preferred locale (before searching for movies)
+		new Setting(containerEl)
+			.setName("Ask preferred locale")
+			.setDesc("Enable or disable the prompt for the preferred locale before searching for movies.")
+			.addToggle(toggle =>
+				toggle.setValue(this.plugin.settings.ask_preferred_locale).onChange(async value => {
+					this.plugin.settings.ask_preferred_locale = value;
+					await this.plugin.saveSettings();
+				}),
+			);
 		new Setting(containerEl)
 			.setName("Open new movie note")
 			.setDesc("Enable or disable the automatic opening of the note on creation.")

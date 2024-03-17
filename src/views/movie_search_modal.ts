@@ -11,10 +11,11 @@ export class MovieSearchModal extends Modal {
 	constructor(
 		plugin: MovieSearchPlugin,
 		private query: string,
+		private locale_preference: string,
 		private callback: (error: Error | null, result?: MovieSearch[]) => void,
 	) {
 		super(plugin.app);
-		this.service_provider = get_service_provider(plugin.settings);
+		this.service_provider = get_service_provider(plugin.settings, locale_preference);
 	}
 
 	setBusy(busy: boolean) {

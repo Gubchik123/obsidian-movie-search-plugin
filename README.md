@@ -107,6 +107,10 @@ You can set the template file location. There is an example template at the bott
 
 Set the preferred locale for the movie search. The default is 'auto', which means that the locale is automatically detected by user's query or browser settings.
 
+### Ask preferred locale
+
+Enable or disable the asking of the preferred locale before searching for movies.
+
 ### Open new movie note
 
 Enable or disable the opening of the new movie note after creation.
@@ -143,7 +147,7 @@ Personally I use the following template to create movie notes ;)
 created: "{{date:DD.MM.YYYY}} {{time:HH:mm}}"
 tags:
     - Entertainment
-    - {{media_type}}
+    - { { media_type } }
 status: TO WATCH
 cover: "{{poster_path}}"
 banner: "{{backdrop_path}}"

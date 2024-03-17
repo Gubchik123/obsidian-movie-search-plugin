@@ -1,5 +1,4 @@
 import { requestUrl } from "obsidian";
-import { ServiceProvider } from "@src/constants";
 import { MovieSearch, Movie } from "@models/movie.model";
 import { MovieSearchPluginSettings } from "@settings/settings";
 import { TMDBMoviesAPI } from "./tmdb_movies_api";
@@ -9,11 +8,9 @@ export interface BaseMoviesAPI {
 	get_movie_by_(id: number, media_type: string): Promise<Movie>;
 }
 
-export function get_service_provider(settings: MovieSearchPluginSettings): BaseMoviesAPI {
-	if (settings.service_provider === ServiceProvider.tmdb) {
-		if (!settings.api_key) throw new Error("TMDB API key is required!"); // TODO: Create a custom error class
-		return new TMDBMoviesAPI(settings.api_key, settings.include_adult, settings.locale_preference);
-	}
+export function get_service_provider(settings: MovieSearchPluginSettings, locale_preference = ""): BaseMoviesAPI {
+	if (!settings.api_key) throw new Error("TMDB API key is required!"); // TODO: Add 10 attempts without API key.
+	return new TMDBMoviesAPI(settings.api_key, settings.include_adult, locale_preference);
 }
 
 export async function api_get<T>(

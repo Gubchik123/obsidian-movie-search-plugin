@@ -1,5 +1,6 @@
 import { Editor, MarkdownView, Notice, Plugin, TFile, stringifyYaml } from "obsidian";
 
+import { LocaleSuggestModal } from "@views/locale_suggest_modal";
 import { MovieSearchModal } from "@views/movie_search_modal";
 import { MovieSuggestModal } from "@views/movie_suggest_modal";
 import { FileExistsModal } from "@views/file_exists_modal";
@@ -63,7 +64,10 @@ export default class MovieSearchPlugin extends Plugin {
 	}
 
 	async get_movie_search_data(query?: string): Promise<MovieSearch> {
-		const searched_movies = await this.open_movie_search_modal(query);
+		let locale_preference = this.settings.locale_preference;
+		if (this.settings.ask_preferred_locale) locale_preference = await this.open_locale_suggest_modal();
+
+		const searched_movies = await this.open_movie_search_modal(query, locale_preference);
 		if (searched_movies.length == 1) return searched_movies[0];
 		return await this.open_movie_suggest_modal(searched_movies);
 	}
@@ -161,9 +165,17 @@ export default class MovieSearchPlugin extends Plugin {
 		await new CursorJumper(this.app).jump_to_next_cursor_location();
 	}
 
-	async open_movie_search_modal(query = ""): Promise<MovieSearch[]> {
+	async open_locale_suggest_modal(): Promise<string> {
 		return new Promise((resolve, reject) => {
-			return new MovieSearchModal(this, query, (error, results) => {
+			return new LocaleSuggestModal(this.app, (error, results) => {
+				return error ? reject(error) : resolve(results);
+			}).open();
+		});
+	}
+
+	async open_movie_search_modal(query = "", locale_preference): Promise<MovieSearch[]> {
+		return new Promise((resolve, reject) => {
+			return new MovieSearchModal(this, query, locale_preference, (error, results) => {
 				return error ? reject(error) : resolve(results);
 			}).open();
 		});
