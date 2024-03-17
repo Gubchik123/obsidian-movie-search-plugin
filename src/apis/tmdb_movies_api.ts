@@ -82,6 +82,8 @@ export class TMDBMoviesAPI implements BaseMoviesAPI {
 		}
 	}
 
+	// TODO: Use more and more movie detail endpoints (images, recommendations, reviews, similar, etc.)
+
 	private get_language_by_(query: string): string {
 		const detected_languages = language_detector.detect(query, 3);
 
