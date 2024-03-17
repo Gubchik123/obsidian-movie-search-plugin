@@ -20,7 +20,10 @@ export interface MovieSearchPluginSettings {
 	template_file: string;
 	open_page_on_completion: boolean;
 	locale_preference: string;
-	ask_preferred_locale: boolean; // TODO: Add recently used locales
+	ask_preferred_locale: boolean;
+	recent_locales: {
+		[locale: string]: number;
+	};
 	service_provider: ServiceProvider;
 	api_key: string;
 	include_adult: boolean;
@@ -38,6 +41,7 @@ export const DEFAULT_SETTINGS: MovieSearchPluginSettings = {
 	open_page_on_completion: true,
 	locale_preference: "auto",
 	ask_preferred_locale: false,
+	recent_locales: {},
 	service_provider: ServiceProvider.tmdb,
 	api_key: "",
 	include_adult: false,

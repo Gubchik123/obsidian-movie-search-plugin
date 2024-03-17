@@ -7,11 +7,7 @@ import { FileExistsModal } from "@views/file_exists_modal";
 import { CursorJumper } from "@utils/cursor_jumper";
 import { MovieSearch, Movie } from "@models/movie.model";
 import { get_service_provider } from "@apis/base_api";
-import {
-	MovieSearchSettingTab,
-	MovieSearchPluginSettings as MovieSearchPluginSettings,
-	DEFAULT_SETTINGS,
-} from "@settings/settings";
+import { MovieSearchSettingTab, MovieSearchPluginSettings, DEFAULT_SETTINGS } from "@settings/settings";
 import {
 	get_template_contents,
 	apply_template_transformations,
@@ -65,8 +61,10 @@ export default class MovieSearchPlugin extends Plugin {
 
 	async get_movie_search_data(query?: string): Promise<MovieSearch> {
 		let locale_preference = this.settings.locale_preference;
-		if (this.settings.ask_preferred_locale) locale_preference = await this.open_locale_suggest_modal();
-
+		if (this.settings.ask_preferred_locale) {
+			locale_preference = await this.open_locale_suggest_modal(this.settings.recent_locales);
+			await this.increment_count_of_recently_used_(locale_preference);
+		}
 		const searched_movies = await this.open_movie_search_modal(query, locale_preference);
 		if (searched_movies.length == 1) return searched_movies[0];
 		return await this.open_movie_suggest_modal(searched_movies);
@@ -151,6 +149,16 @@ export default class MovieSearchPlugin extends Plugin {
 		return `${folder_path}/${file_name}`;
 	}
 
+	private async increment_count_of_recently_used_(locale: string) {
+		if (this.settings.recent_locales[locale]) this.settings.recent_locales[locale]++;
+		else this.settings.recent_locales[locale] = 1;
+		// Sort by count
+		this.settings.recent_locales = Object.fromEntries(
+			Object.entries(this.settings.recent_locales).sort(([, a], [, b]) => b - a),
+		);
+		await this.saveSettings();
+	}
+
 	async open_new_movie_note(target_file: TFile) {
 		if (!this.settings.open_page_on_completion) return;
 		// open file
@@ -165,9 +173,9 @@ export default class MovieSearchPlugin extends Plugin {
 		await new CursorJumper(this.app).jump_to_next_cursor_location();
 	}
 
-	async open_locale_suggest_modal(): Promise<string> {
+	async open_locale_suggest_modal(recent_locales: { [locale: string]: number }): Promise<string> {
 		return new Promise((resolve, reject) => {
-			return new LocaleSuggestModal(this.app, (error, results) => {
+			return new LocaleSuggestModal(this.app, recent_locales, (error, results) => {
 				return error ? reject(error) : resolve(results);
 			}).open();
 		});

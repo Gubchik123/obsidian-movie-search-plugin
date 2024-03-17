@@ -21,6 +21,11 @@
 	display: flex;
 }
 
+.movie-search-plugin__recent-locale {
+	float: right;
+	color: #666;
+}
+
 .movie-search-plugin__search-modal--input {
 	padding-bottom: 18px;
 }

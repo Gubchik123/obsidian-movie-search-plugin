@@ -33,9 +33,6 @@ export class TMDBMoviesAPI implements BaseMoviesAPI {
 
 			this.add_jwt_or_api_key(params, headers);
 
-			console.log("params", params);
-			console.log("headers", headers);
-
 			const search_results = await api_get<TMDBMovieSearchResponse>(
 				"https://api.themoviedb.org/3/search/multi",
 				params,
