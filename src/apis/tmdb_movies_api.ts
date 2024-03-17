@@ -30,14 +30,11 @@ export class TMDBMoviesAPI implements BaseMoviesAPI {
 				language: language,
 			};
 			const headers = {};
-			// If the given API key is JWT
-			if (this.api_key.length > 32) {
-				const splited_api_key = this.api_key.split(" ");
-				headers["Authorization"] =
-					splited_api_key.length > 1
-						? `Bearer ${splited_api_key[splited_api_key.length - 1]}`
-						: `Bearer ${this.api_key}`;
-			} else params["api_key"] = this.api_key;
+
+			this.add_jwt_or_api_key(params, headers);
+
+			console.log("params", params);
+			console.log("headers", headers);
 
 			const search_results = await api_get<TMDBMovieSearchResponse>(
 				"https://api.themoviedb.org/3/search/multi",
@@ -61,14 +58,8 @@ export class TMDBMoviesAPI implements BaseMoviesAPI {
 				append_to_response: "videos,credits",
 			};
 			const headers = {};
-			// If the given API key is JWT
-			if (this.api_key.length > 32) {
-				const splited_api_key = this.api_key.split(" ");
-				headers["Authorization"] =
-					splited_api_key.length > 1
-						? `Bearer ${splited_api_key[splited_api_key.length - 1]}`
-						: `Bearer ${this.api_key}`;
-			} else params["api_key"] = this.api_key;
+
+			this.add_jwt_or_api_key(params, headers);
 
 			const movie = await api_get<TMDBMovieResponse>(
 				`https://api.themoviedb.org/3/${this.convert_to_lower_case(media_type)}/${id}`,
@@ -89,6 +80,16 @@ export class TMDBMoviesAPI implements BaseMoviesAPI {
 
 		if (detected_languages.length) return detected_languages[0][0].slice(0, 2);
 		return window.moment.locale() || "en";
+	}
+
+	private add_jwt_or_api_key(params: Record<string, string | number | boolean>, headers: Record<string, string>) {
+		if (this.api_key.length > 32) {
+			const splited_api_key = this.api_key.split(" ");
+			headers["Authorization"] =
+				splited_api_key.length > 1
+					? `Bearer ${splited_api_key[splited_api_key.length - 1]}`
+					: `Bearer ${this.api_key}`;
+		} else params["api_key"] = this.api_key;
 	}
 
 	private convert_to_lower_case(media_type: string): string {
