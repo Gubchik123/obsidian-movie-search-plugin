@@ -2,6 +2,7 @@ import { Editor, MarkdownView, Notice, Plugin, TFile, stringifyYaml } from "obsi
 
 import { MovieSearchModal } from "@views/movie_search_modal";
 import { MovieSuggestModal } from "@views/movie_suggest_modal";
+import { FileExistsModal } from "@views/file_exists_modal";
 import { CursorJumper } from "@utils/cursor_jumper";
 import { MovieSearch, Movie } from "@models/movie.model";
 import { get_service_provider } from "@apis/base_api";
@@ -119,9 +120,14 @@ export default class MovieSearchPlugin extends Plugin {
 			const rendered_contents = await this.get_rendered_contents(movie);
 			// Create new file.
 			const file_path = await this.get_file_path_for_(movie);
-			// TODO: If the same file exists, ask if user want to overwrite it.
-			const target_file = await this.app.vault.create(file_path, rendered_contents);
+			const file = this.app.vault.getAbstractFileByPath(file_path);
 
+			if (file) {
+				const is_overwrite = await this.open_file_exists_modal();
+				if (!is_overwrite) return;
+				await this.app.vault.delete(file);
+			}
+			const target_file = await this.app.vault.create(file_path, rendered_contents);
 			await use_templater_plugin_in_file(this.app, target_file);
 			this.open_new_movie_note(target_file);
 		} catch (err) {
@@ -168,6 +174,21 @@ export default class MovieSearchPlugin extends Plugin {
 			return new MovieSuggestModal(this.app, movies, (error, selected_movie) => {
 				return error ? reject(error) : resolve(selected_movie);
 			}).open();
+		});
+	}
+
+	async open_file_exists_modal(): Promise<boolean> {
+		return new Promise((resolve, reject) => {
+			const modal = new FileExistsModal(this.app);
+			modal.open();
+			modal
+				.waitForResult()
+				.then(result => {
+					resolve(result);
+				})
+				.catch(error => {
+					reject(error);
+				});
 		});
 	}
 

@@ -27,3 +27,7 @@
 .movie-search-plugin__search-modal--input input {
 	width: 100%;
 }
+
+.movie-search-plugin__modal-button {
+	margin: 5px;
+}
