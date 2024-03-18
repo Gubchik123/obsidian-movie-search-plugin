@@ -159,6 +159,17 @@ export default class MovieSearchPlugin extends Plugin {
 		await this.saveSettings();
 	}
 
+	private async increment_no_api_key_attempts() {
+		new Notice(
+			`You need to set your TMDB API key in the settings. ${
+				10 - this.settings.no_api_key_attempts
+			} attempts left.`,
+			5000,
+		);
+		this.settings.no_api_key_attempts++;
+		await this.saveSettings();
+	}
+
 	async open_new_movie_note(target_file: TFile) {
 		if (!this.settings.open_page_on_completion) return;
 		// open file
@@ -181,7 +192,10 @@ export default class MovieSearchPlugin extends Plugin {
 		});
 	}
 
-	async open_movie_search_modal(query = "", locale_preference): Promise<MovieSearch[]> {
+	async open_movie_search_modal(query = "", locale_preference: string): Promise<MovieSearch[]> {
+		if (!this.settings.api_key && this.settings.no_api_key_attempts <= 10)
+			await this.increment_no_api_key_attempts();
+
 		return new Promise((resolve, reject) => {
 			return new MovieSearchModal(this, query, locale_preference, (error, results) => {
 				return error ? reject(error) : resolve(results);

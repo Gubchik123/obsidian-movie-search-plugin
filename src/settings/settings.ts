@@ -21,12 +21,14 @@ export interface MovieSearchPluginSettings {
 	open_page_on_completion: boolean;
 	locale_preference: string;
 	ask_preferred_locale: boolean;
+	api_key: string;
+	include_adult: boolean;
+	// Hidden from the user settings
+	service_provider: ServiceProvider;
 	recent_locales: {
 		[locale: string]: number;
 	};
-	service_provider: ServiceProvider;
-	api_key: string;
-	include_adult: boolean;
+	no_api_key_attempts: number;
 	// Default settings
 	frontmatter: string; // frontmatter that is inserted into the file
 	content: string; // what is automatically written to the file.
@@ -41,10 +43,12 @@ export const DEFAULT_SETTINGS: MovieSearchPluginSettings = {
 	open_page_on_completion: true,
 	locale_preference: "auto",
 	ask_preferred_locale: false,
-	recent_locales: {},
-	service_provider: ServiceProvider.tmdb,
 	api_key: "",
 	include_adult: false,
+	// Hidden from the user settings
+	service_provider: ServiceProvider.tmdb,
+	recent_locales: {},
+	no_api_key_attempts: 0,
 	// Default settings
 	frontmatter: "",
 	content: "",

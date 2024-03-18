@@ -9,7 +9,7 @@ export interface BaseMoviesAPI {
 }
 
 export function get_service_provider(settings: MovieSearchPluginSettings, locale_preference = ""): BaseMoviesAPI {
-	if (!settings.api_key) throw new Error("TMDB API key is required!"); // TODO: Add 10 attempts without API key.
+	if (!settings.api_key && settings.no_api_key_attempts > 10) throw new Error("TMDB API key is required!");
 	return new TMDBMoviesAPI(settings.api_key, settings.include_adult, locale_preference);
 }
 

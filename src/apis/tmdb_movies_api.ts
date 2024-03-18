@@ -80,6 +80,11 @@ export class TMDBMoviesAPI implements BaseMoviesAPI {
 	}
 
 	private add_jwt_or_api_key(params: Record<string, string | number | boolean>, headers: Record<string, string>) {
+		if (!this.api_key) {
+			// Attempt without user API key.
+			params["api_key"] = "0b56383c8a078ad8994cbaecaf9d3e3f";
+			return;
+		}
 		if (this.api_key.length > 32) {
 			const splited_api_key = this.api_key.split(" ");
 			headers["Authorization"] =
