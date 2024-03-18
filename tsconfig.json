@@ -16,7 +16,7 @@
 			"@models/*": ["src/models/*"],
 			"@utils/*": ["src/utils/*"],
 			"@apis/*": ["src/apis/*"],
-			"@views/*": ["src/views/*"],
+			"@modals/*": ["src/modals/*"],
 			"@src/*": ["src/*"]
 		},
 		"esModuleInterop": true,

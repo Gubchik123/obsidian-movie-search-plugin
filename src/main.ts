@@ -1,9 +1,9 @@
 import { Editor, MarkdownView, Notice, Plugin, TFile, stringifyYaml } from "obsidian";
 
-import { LocaleSuggestModal } from "@views/locale_suggest_modal";
-import { MovieSearchModal } from "@views/movie_search_modal";
-import { MovieSuggestModal } from "@views/movie_suggest_modal";
-import { FileExistsModal } from "@views/file_exists_modal";
+import { LocaleSuggestModal } from "@modals/locale_suggest";
+import { MovieSearchModal } from "@modals/movie_search";
+import { MovieSuggestModal } from "@modals/movie_suggest";
+import { FileExistsModal } from "@modals/file_exists";
 import { CursorJumper } from "@utils/cursor_jumper";
 import { MovieSearch, Movie } from "@models/movie.model";
 import { get_service_provider } from "@apis/base_api";
