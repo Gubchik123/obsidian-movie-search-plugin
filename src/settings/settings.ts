@@ -176,7 +176,7 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 		const api_key_desc = document.createDocumentFragment();
 		api_key_desc.createEl("a", {
 			text: "Login and get your API Key here.",
-			href: "https://developer.themoviedb.org/reference/intro/authentication",
+			href: "https://www.themoviedb.org/settings/api",
 		});
 		APISettings.push(
 			new Setting(containerEl)

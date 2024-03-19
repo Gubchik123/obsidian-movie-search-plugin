@@ -121,7 +121,7 @@ Enable or disable the opening of the new movie note after creation.
 
 Set the API key for TMDB.
 
-> You can get an API key from [developer.themoviedb.org](https://developer.themoviedb.org/reference/intro/authentication).
+> You can get an API key from [developer.themoviedb.org](https://www.themoviedb.org/settings/api).
 
 > You can use either "Access Token Auth" (JWT) or "API Key Auth".
 
