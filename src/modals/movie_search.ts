@@ -3,6 +3,8 @@ import { MovieSearch } from "@models/movie.model";
 import { BaseMoviesAPI, get_service_provider } from "@apis/base_api";
 import MovieSearchPlugin from "@src/main";
 
+export let search_query = "";
+
 export class MovieSearchModal extends Modal {
 	private isBusy = false;
 	private okBtnRef?: ButtonComponent;
@@ -37,6 +39,7 @@ export class MovieSearchModal extends Modal {
 					new Notice(`No results found for "${this.query}"`); // Couldn't find the movie.
 					return;
 				}
+				search_query = this.query;
 				this.callback(null, searchResults);
 			} catch (err) {
 				this.callback(err as Error);

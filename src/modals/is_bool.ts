@@ -1,19 +1,26 @@
 import { App, Modal, ButtonComponent } from "obsidian";
 
-export class FileExistsModal extends Modal {
-	private resolve: ((value: boolean) => void) | null = null;
+export class IsBoolModal extends Modal {
+	protected question: string;
+	protected yes_button_text: string;
+	protected no_button_text: string;
 
-	constructor(app: App) {
+	protected resolve: ((value: boolean) => void) | null = null;
+
+	constructor(app: App, question: string, yes_button_text: string, no_button_text: string) {
 		super(app);
+		this.question = question;
+		this.yes_button_text = yes_button_text;
+		this.no_button_text = no_button_text;
 	}
 
 	onOpen() {
 		const { contentEl } = this;
 
-		contentEl.createEl("h2", { text: "File already exists. Do you want to overwrite it?" });
+		contentEl.createEl("h2", { text: this.question });
 
 		new ButtonComponent(contentEl)
-			.setButtonText("Yes, overwrite")
+			.setButtonText(this.yes_button_text)
 			.setCta()
 			.setClass("movie-search-plugin__modal-button")
 			.onClick(() => {
@@ -21,7 +28,7 @@ export class FileExistsModal extends Modal {
 				this.close();
 			});
 		new ButtonComponent(contentEl)
-			.setButtonText("No, cancel")
+			.setButtonText(this.no_button_text)
 			.setClass("movie-search-plugin__modal-button")
 			.onClick(() => {
 				if (this.resolve) this.resolve(false);

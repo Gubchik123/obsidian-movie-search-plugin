@@ -1,9 +1,10 @@
 import { Editor, MarkdownView, Notice, Plugin, TFile, stringifyYaml } from "obsidian";
 
 import { LocaleSuggestModal } from "@modals/locale_suggest";
-import { MovieSearchModal } from "@modals/movie_search";
+import { search_query, MovieSearchModal } from "@modals/movie_search";
+import { IsCreateAllMoviePartsModal } from "@modals/is_create_all_movie_parts";
 import { MovieSuggestModal } from "@modals/movie_suggest";
-import { FileExistsModal } from "@modals/file_exists";
+import { IsOverwriteFileModal } from "@modals/is_overwrite_file";
 import { CursorJumper } from "@utils/cursor_jumper";
 import { MovieSearch, Movie } from "@models/movie.model";
 import { get_service_provider } from "@apis/base_api";
@@ -59,15 +60,26 @@ export default class MovieSearchPlugin extends Plugin {
 		}
 	}
 
-	async get_movie_search_data(query?: string): Promise<MovieSearch> {
+	async get_movie_search_data(query?: string, multi = true): Promise<MovieSearch[]> {
 		let locale_preference = this.settings.locale_preference;
 		if (this.settings.ask_preferred_locale) {
 			locale_preference = await this.open_locale_suggest_modal(this.settings.recent_locales);
 			await this.increment_count_of_recently_used_(locale_preference);
 		}
 		const searched_movies = await this.open_movie_search_modal(query, locale_preference);
-		if (searched_movies.length == 1) return searched_movies[0];
-		return await this.open_movie_suggest_modal(searched_movies);
+		if (multi) {
+			const all_movie_parts = this.get_all_movie_parts(searched_movies, search_query);
+			if (all_movie_parts.length > 1) {
+				const is_create_all_movie_parts = await this.open_bool_modal(
+					IsCreateAllMoviePartsModal,
+					search_query,
+					all_movie_parts.length,
+				);
+				if (is_create_all_movie_parts) return all_movie_parts;
+			}
+		}
+		if (searched_movies.length == 1) return [searched_movies[0]];
+		return [await this.open_movie_suggest_modal(searched_movies)];
 	}
 
 	async get_movie_data(movie_search: MovieSearch): Promise<Movie> {
@@ -105,8 +117,8 @@ export default class MovieSearchPlugin extends Plugin {
 	async insert_data(editor: Editor, file_basename: string): Promise<void> {
 		try {
 			// TODO: Use the selected text as a search query.
-			const movie_search = await this.get_movie_search_data(file_basename);
-			const movie = await this.get_movie_data(movie_search);
+			const movie_search_data = await this.get_movie_search_data(file_basename, false);
+			const movie = await this.get_movie_data(movie_search_data[0]);
 			const rendered_contents = await this.get_rendered_contents(movie);
 			editor.replaceRange(rendered_contents, { line: 0, ch: 0 });
 		} catch (err) {
@@ -117,21 +129,25 @@ export default class MovieSearchPlugin extends Plugin {
 
 	async create_new_movie_note(): Promise<void> {
 		try {
-			const movie_search = await this.get_movie_search_data();
-			const movie = await this.get_movie_data(movie_search);
-			const rendered_contents = await this.get_rendered_contents(movie);
-			// Create new file.
-			const file_path = await this.get_file_path_for_(movie);
-			const file = this.app.vault.getAbstractFileByPath(file_path);
+			let first_movie_target_file: TFile;
+			const movie_search_data = await this.get_movie_search_data();
+			for (let i = 0; i < movie_search_data.length; i++) {
+				const movie = await this.get_movie_data(movie_search_data[i]);
+				const rendered_contents = await this.get_rendered_contents(movie);
+				// Create new file.
+				const file_path = await this.get_file_path_for_(movie);
+				const file = this.app.vault.getAbstractFileByPath(file_path);
 
-			if (file) {
-				const is_overwrite = await this.open_file_exists_modal();
-				if (!is_overwrite) return;
-				await this.app.vault.delete(file);
+				if (file) {
+					const is_overwrite = await this.open_bool_modal(IsOverwriteFileModal, file.name);
+					if (!is_overwrite) continue;
+					await this.app.vault.delete(file);
+				}
+				const target_file = await this.app.vault.create(file_path, rendered_contents);
+				if (i == 0) first_movie_target_file = target_file;
+				await use_templater_plugin_in_file(this.app, target_file);
 			}
-			const target_file = await this.app.vault.create(file_path, rendered_contents);
-			await use_templater_plugin_in_file(this.app, target_file);
-			this.open_new_movie_note(target_file);
+			if (first_movie_target_file) this.open_new_movie_note(first_movie_target_file);
 		} catch (err) {
 			console.warn(err);
 			this.show_notice(err);
@@ -211,12 +227,11 @@ export default class MovieSearchPlugin extends Plugin {
 		});
 	}
 
-	async open_file_exists_modal(): Promise<boolean> {
+	async open_bool_modal(modal, ...args: any[]): Promise<boolean> {
 		return new Promise((resolve, reject) => {
-			const modal = new FileExistsModal(this.app);
-			modal.open();
-			modal
-				.waitForResult()
+			const m = new modal(this.app, ...args);
+			m.open();
+			m.waitForResult()
 				.then(result => {
 					resolve(result);
 				})
@@ -232,5 +247,28 @@ export default class MovieSearchPlugin extends Plugin {
 
 	async saveSettings() {
 		await this.saveData(this.settings);
+	}
+
+	private get_all_movie_parts(searched_movies: MovieSearch[], query: string): MovieSearch[] {
+		if (searched_movies.length <= 1 || query.match(/.+ \d/)) return [];
+
+		const movie_parts: MovieSearch[] = [];
+		const input = query.trim().toLowerCase();
+		const exact_movie = searched_movies.find(
+			movie => movie.title.toLowerCase() == input || movie.original_title.toLowerCase() == input,
+		);
+		if (exact_movie) {
+			const movie_title = exact_movie.title;
+			movie_parts.push(exact_movie);
+
+			let part = 2;
+			for (const movie of searched_movies) {
+				if (movie.title.toLowerCase() == `${movie_title} ${part}`.toLowerCase()) {
+					movie_parts.push(movie);
+					part++;
+				}
+			}
+		}
+		return movie_parts;
 	}
 }
