@@ -12,6 +12,8 @@ import {
 let language: string;
 const language_detector = new LanguageDetect();
 
+export const DEFAULT_API_KEY = "0b56383c8a078ad8994cbaecaf9d3e3f";
+
 export class TMDBMoviesAPI implements BaseMoviesAPI {
 	constructor(
 		private readonly api_key?: string,
@@ -82,7 +84,7 @@ export class TMDBMoviesAPI implements BaseMoviesAPI {
 	private add_jwt_or_api_key(params: Record<string, string | number | boolean>, headers: Record<string, string>) {
 		if (!this.api_key) {
 			// Attempt without user API key.
-			params["api_key"] = "0b56383c8a078ad8994cbaecaf9d3e3f";
+			params["api_key"] = DEFAULT_API_KEY;
 			return;
 		}
 		if (this.api_key.length > 32) {
@@ -116,7 +118,7 @@ export class TMDBMoviesAPI implements BaseMoviesAPI {
 	private create_movie_from_(response: TMDBMovieResponse, media_type: string): Movie {
 		const movie: Movie = {
 			adult: response.adult,
-			backdrop_path: `https://image.tmdb.org/t/p/original${response.backdrop_path}`,
+			backdrop_path: response.backdrop_path ? `https://image.tmdb.org/t/p/original${response.backdrop_path}` : "",
 			main_actors: response.credits.cast.map(actor => `${actor.name} (${actor.character})`).slice(0, 10),
 			media_type: media_type,
 			director: response.credits.crew.find(crew => crew.job === "Director")?.name,
@@ -127,7 +129,7 @@ export class TMDBMoviesAPI implements BaseMoviesAPI {
 			original_title: response.original_title || response.original_name,
 			overview: response.overview,
 			popularity: response.popularity,
-			poster_path: `https://image.tmdb.org/t/p/original${response.poster_path}`,
+			poster_path: response.poster_path ? `https://image.tmdb.org/t/p/original${response.poster_path}` : "",
 			production_companies: response.production_companies.map(
 				company => `${company.name} (${company.origin_country})`,
 			),

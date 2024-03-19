@@ -1,7 +1,7 @@
 import { requestUrl } from "obsidian";
 import { MovieSearch, Movie } from "@models/movie.model";
 import { MovieSearchPluginSettings } from "@settings/settings";
-import { TMDBMoviesAPI } from "./tmdb_movies_api";
+import { DEFAULT_API_KEY, TMDBMoviesAPI } from "./tmdb_movies_api";
 
 export interface BaseMoviesAPI {
 	get_movies_by_(query: string): Promise<MovieSearch[]>;
@@ -10,6 +10,7 @@ export interface BaseMoviesAPI {
 
 export function get_service_provider(settings: MovieSearchPluginSettings, locale_preference = ""): BaseMoviesAPI {
 	if (!settings.api_key && settings.no_api_key_attempts > 10) throw new Error("TMDB API key is required!");
+	if (settings.api_key == DEFAULT_API_KEY) throw new Error("Use you own TMDB API key :)");
 	return new TMDBMoviesAPI(settings.api_key, settings.include_adult, locale_preference);
 }
 
