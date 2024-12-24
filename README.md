@@ -258,30 +258,31 @@ Please find here a definition of the possible variables to be used in your templ
 <details>
 <summary><h3 style="display: inline-block;">Table</h3></summary>
 
-| name                 | type    | description                            |
-| -------------------- | ------- | -------------------------------------- |
-| adult                | boolean | The adult status of the movie.         |
-| backdrop_path        | string  | The backdrop image URL of the movie.   |
-| main_actors          | string  | The main actors of the movie.          |
-| media_type           | string  | It can be 'Movies' or 'TV'.            |
-| director             | string  | The director of the movie.             |
-| genres               | string  | The genres of the movie.               |
-| homepage             | string  | The homepage of the movie.             |
-| id                   | integer | The TMDB ID of the movie.              |
-| original_language    | string  | The original language of the movie.    |
-| original_title       | string  | The original title of the movie.       |
-| overview             | string  | The overview of the movie.             |
-| popularity           | float   | The popularity of the movie.           |
-| poster_path          | string  | The cover image URL of the movie.      |
-| production_companies | string  | The production companies of the movie. |
-| production_countries | string  | The production countries of the movie. |
-| release_date         | string  | The date the movie was published.      |
-| spoken_languages     | string  | The spoken languages of the movie.     |
-| tagline              | string  | The tagline of the movie.              |
-| title                | string  | The title of the movie.                |
-| vote_average         | float   | The average vote of the movie.         |
-| vote_count           | integer | The vote count of the movie.           |
-| youtube_url          | string  | The youtube trailer URL of the movie.  |
+| name                 | type    | description                                                         |
+|----------------------| ------- |---------------------------------------------------------------------|
+| adult                | boolean | The adult status of the movie.                                      |
+| backdrop_path        | string  | The backdrop image URL of the movie.                                |
+| main_actors          | string  | The main actors of the movie.                                       |
+| media_type           | string  | It can be 'Movies' or 'TV'.                                         |
+| director             | string  | The director of the movie.                                          |
+| genres               | string  | The genres of the movie.                                            |
+| homepage             | string  | The homepage of the movie.                                          |
+| id                   | integer | The TMDB ID of the movie.                                           |
+| original_language    | string  | The original language of the movie.                                 |
+| original_title       | string  | The original title of the movie.                                    |
+| overview             | string  | The overview of the movie.                                          |
+| popularity           | float   | The popularity of the movie.                                        |
+| poster_path          | string  | The cover image URL of the movie.                                   |
+| production_companies | string  | The production companies of the movie.                              |
+| production_countries | string  | The production countries of the movie.                              |
+| release_date         | string  | The date the movie was published.                                   |
+| runtime              | string  | The runtime of a movie or the average episode runtime of a TV show. |
+| spoken_languages     | string  | The spoken languages of the movie.                                  |
+| tagline              | string  | The tagline of the movie.                                           |
+| title                | string  | The title of the movie.                                             |
+| vote_average         | float   | The average vote of the movie.                                      |
+| vote_count           | integer | The vote count of the movie.                                        |
+| youtube_url          | string  | The youtube trailer URL of the movie.                               |
 
 </details>
 

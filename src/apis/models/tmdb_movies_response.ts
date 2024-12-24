@@ -42,6 +42,9 @@ export interface TMDBMovieResponse {
 	release_date: string;
 	// OR
 	first_air_date: string;
+	runtime: number;
+	// OR
+	episode_run_time: number[];
 	spoken_languages: SpokenLanguage[];
 	tagline: string;
 	title: string;
