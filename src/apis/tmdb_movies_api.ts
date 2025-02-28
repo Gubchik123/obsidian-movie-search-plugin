@@ -126,6 +126,7 @@ export class TMDBMoviesAPI implements BaseMoviesAPI {
 			genres: response.genres.map(genre => genre.name),
 			homepage: response.homepage,
 			id: response.id,
+			imdb_id: response.imdb_id,
 			original_language: response.original_language,
 			original_title: response.original_title || response.original_name,
 			overview: response.overview,
