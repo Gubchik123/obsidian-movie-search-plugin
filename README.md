@@ -268,6 +268,7 @@ Please find here a definition of the possible variables to be used in your templ
 | genres               | string  | The genres of the movie.               |
 | homepage             | string  | The homepage of the movie.             |
 | id                   | integer | The TMDB ID of the movie.              |
+| imdb_id              | string  | The IMDB ID of the movie.              |
 | original_language    | string  | The original language of the movie.    |
 | original_title       | string  | The original title of the movie.       |
 | overview             | string  | The overview of the movie.             |
