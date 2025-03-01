@@ -7,10 +7,14 @@ export const DATE_REGEX = /{{DATE(\+-?[0-9]+)?}}/;
 export const DATE_REGEX_FORMATTED = /{{DATE:([^}\n\r+]*)(\+-?[0-9]+)?}}/;
 
 export function replace_illegal_file_name_characters_in_(text: string) {
-	return text.replace(/[\\*<>":?]/g, "").replace(/\s+/g, " ");
+	return text
+		.replace(/[\\*<>":?]/g, "") // Removes illegal characters
+		.replace(/\s+/g, " ") // Replaces multiple spaces with a single space
+		.replace(/^\.+/, ""); // Removes all leading dots from the string
 }
 
 export function make_file_name_for_(movie: Movie, file_name_format?: string) {
+	movie.title = replace_illegal_file_name_characters_in_(movie.title);
 	let result: string = movie.title;
 	if (file_name_format) result = replace_variable_syntax(movie, replace_date_in_(file_name_format));
 	return replace_illegal_file_name_characters_in_(result) + ".md";
