@@ -101,6 +101,11 @@ export function replace_date_in_(input: string) {
 	return output;
 }
 
+export function is_entry_in_template(entry_name: string, template_text: string): boolean{
+	const regex = new RegExp(`{{\\s*${entry_name}\\s*}}`, "i");
+	return regex.test(template_text);
+}
+
 function replacer(str: string, reg: RegExp, replace_value: string) {
 	return str.replace(reg, function () {
 		return replace_value;

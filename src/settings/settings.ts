@@ -18,6 +18,7 @@ export interface MovieSearchPluginSettings {
 	folder: string; // new file location
 	file_name_format: string; // new file name format
 	template_file: string;
+	local_image_path: string;
 	open_page_on_completion: boolean;
 	locale_preference: string;
 	ask_preferred_locale: boolean;
@@ -40,6 +41,7 @@ export const DEFAULT_SETTINGS: MovieSearchPluginSettings = {
 	folder: "",
 	file_name_format: "",
 	template_file: "",
+	local_image_path: "",
 	open_page_on_completion: true,
 	locale_preference: "auto",
 	ask_preferred_locale: false,
@@ -127,6 +129,22 @@ export class MovieSearchSettingTab extends PluginSettingTab {
 					.onChange(new_template_file => {
 						this.plugin.settings.template_file = new_template_file;
 						this.plugin.saveSettings();
+					});
+			});
+		new Setting(containerEl)
+			.setName("Local Images Folder")
+			.setDesc("Folder where banner and cover images will be downloaded. Leave empty to disable local images.")
+			.addSearch(cb => {
+				try {
+					new FolderSuggest(this.app, cb.inputEl);
+				} catch {
+					// eslint-disable
+				}
+				cb.setPlaceholder("Example: attachments/images")
+					.setValue(this.plugin.settings.local_image_path ?? "")
+					.onChange(async value => {
+						this.plugin.settings.local_image_path = value.trim();
+						await this.plugin.saveSettings();
 					});
 			});
 		new Setting(containerEl)
